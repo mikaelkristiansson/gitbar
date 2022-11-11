@@ -7,7 +7,7 @@ import {
 import { useAuthentication } from '../hooks/auth';
 
 export default function MainLayout() {
-  const { accounts } = useAuthentication();
+  const { accounts, logout } = useAuthentication();
   return (
     <main>
       <Outlet />
@@ -21,7 +21,7 @@ export default function MainLayout() {
             <button className="p-2">
               <Cog8ToothIcon className="h-6 w-6" />
             </button>
-            <button className="p-2">
+            <button className="p-2" onClick={logout}>
               <PowerIcon className="h-6 w-6" />
             </button>
           </div>

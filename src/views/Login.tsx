@@ -1,4 +1,4 @@
-import { useAuthentication } from '../hooks/auth';
+import { defaultHost, useAuthentication } from '../hooks/auth';
 import { isRequired, useForm, Validations } from '../hooks/use-form';
 
 type Inputs = {
@@ -8,14 +8,14 @@ type Inputs = {
 
 export default function Login() {
   const { validateToken } = useAuthentication();
-  const initialState = { token: '', hostname: 'github.com' };
+  const initialState = { token: '', hostname: defaultHost };
   const validations: Validations = [
     ({ token }) => /^[A-Z0-9_]{40}$/i.test(token) || { token: 'Invalid token' },
     ({ token }) => isRequired(token) || { token: 'Required' },
-    ({ hostname }) =>
-      /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/i.test(
-        hostname
-      ) || { hostname: 'Invalid hostname' },
+    // ({ hostname }) =>
+    //   /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/i.test(
+    //     hostname
+    //   ) || { hostname: 'Invalid hostname' },
   ];
 
   const onSubmit = (data: Inputs) => {
@@ -95,7 +95,7 @@ export default function Login() {
             <p className="text-red-500 dark:text-red-300">{errors.hostname}</p>
           ) : null}
           <span className="text-sm">
-            Defaults to github.com. Change only if you are using GitHub for
+            Defaults to {defaultHost}. Change only if you are using GitHub for
             Enterprise.
           </span>
         </div>

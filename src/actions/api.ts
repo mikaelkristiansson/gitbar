@@ -1,7 +1,9 @@
 import { AuthResponse, AuthState, AuthTokenResponse, User } from '../types';
-import { transport } from '../utils/transport';
+// import { transport } from '../utils/transport';
+import { getClient, ResponseType, Body } from '@tauri-apps/api/http';
 
 export const github = {
+  api: 'https://api.github.com',
   // GitHub OAuth
   AUTH_SCOPE: ['read:user', 'notifications'],
 
@@ -76,38 +78,44 @@ export const getUserData = async (
   token: string,
   hostname: string
 ): Promise<User> => {
-  const response = await transport.get(`/api/user`, {
-    Authorization: `token ${token}`,
+  const client = await getClient();
+  const response: any = await client.get(`https://${hostname}/user`, {
+    responseType: ResponseType.JSON,
+    headers: {
+      Authorization: `token ${token}`,
+    },
   });
-  // const response = await transport.get(`https://api.${hostname}/user`, {
+  console.log('response', response);
+  const { data } = response;
+  // const response = await transport.get(`/api/user/api.${hostname}`, {
   //   Authorization: `token ${token}`,
   // });
 
   return {
-    id: response.id,
-    login: response.login,
-    name: response.name,
-    // avatar_url: response.avatar_url
+    id: data.id,
+    login: data.login,
+    name: data.name,
+    avatar_url: data.avatar_url,
   };
 };
 
-export const getToken = async (
-  authCode: string,
-  authOptions = github.DEFAULT_AUTH_OPTIONS
-): Promise<AuthTokenResponse> => {
-  const url = `https://${authOptions.hostname}/login/oauth/access_token`;
-  const data = {
-    client_id: authOptions.clientId,
-    client_secret: authOptions.clientSecret,
-    code: authCode,
-  };
+// export const getToken = async (
+//   authCode: string,
+//   authOptions = github.DEFAULT_AUTH_OPTIONS
+// ): Promise<AuthTokenResponse> => {
+//   const url = `https://${authOptions.hostname}/login/oauth/access_token`;
+//   const data = {
+//     client_id: authOptions.clientId,
+//     client_secret: authOptions.clientSecret,
+//     code: authCode,
+//   };
 
-  const response = await transport.post(url, data);
-  return {
-    hostname: authOptions.hostname,
-    token: response.data.access_token,
-  };
-};
+//   const response = await transport.post(url, data);
+//   return {
+//     hostname: authOptions.hostname,
+//     token: response.data.access_token,
+//   };
+// };
 
 export const addAccount = (
   accounts: AuthState,
@@ -115,15 +123,68 @@ export const addAccount = (
   hostname: string,
   user?: User
 ): AuthState => {
-  if (hostname === github.DEFAULT_AUTH_OPTIONS.hostname) {
-    return {
-      ...accounts,
-      token,
-      user: user ?? null,
-    };
-  }
-
   return {
     ...accounts,
+    token,
+    hostname,
+    user: user ?? null,
   };
+  // if (hostname === github.DEFAULT_AUTH_OPTIONS.hostname) {
+  //   return {
+  //     ...accounts,
+  //     token,
+  //     user: user ?? null,
+  //   };
+  // }
+
+  // return {
+  //   ...accounts,
+  // };
+};
+
+export const getReviews = async (account: AuthState) => {
+  const search = `type:pr state:open review-requested:${account.user?.login}`;
+  const text = `
+  {
+    search(query: "${search}", type: ISSUE, first: 100) {
+      issueCount
+      edges {
+        node {
+          ... on PullRequest {
+            repository {
+              nameWithOwner
+            }
+            author {
+              login
+            }
+            createdAt
+            number
+            url
+            title
+            labels(first:100) {
+              nodes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+  const body = {
+    query: text,
+  };
+  const client = await getClient();
+  const response: any = await client.post(
+    `https://${account.hostname.replace('/v3', '')}/graphql`,
+    Body.text(JSON.stringify(body)),
+    {
+      headers: {
+        Authorization: `token ${account.token}`,
+      },
+    }
+  );
+  const { data } = response;
+  return data.data.search;
 };

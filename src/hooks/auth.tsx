@@ -9,7 +9,7 @@ import React, {
 import {
   addAccount,
   /* authGitHub, */
-  getToken,
+  // getToken,
   getUserData,
   github,
 } from '../actions/api';
@@ -21,8 +21,11 @@ import {
 } from '../types';
 import { clearState, loadState, saveState } from '../utils/storage';
 
+export const defaultHost = 'api.github.com';
+
 const defaultAccounts: AuthState = {
   token: undefined,
+  hostname: defaultHost,
   user: null,
 };
 

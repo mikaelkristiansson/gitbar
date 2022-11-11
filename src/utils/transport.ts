@@ -92,8 +92,8 @@ export const transport = {
   /**
    * Performs a post request
    */
-  post(endpoint: string, data: object) {
-    return client(endpoint, { method: 'POST', body: { ...data } });
+  post(endpoint: string, data: object, headers?: any) {
+    return client(endpoint, { method: 'POST', body: { ...data } }, headers);
   },
 
   /**
