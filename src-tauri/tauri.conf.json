@@ -67,9 +67,8 @@
         "width": 500,
         "visible": false,
         "skipTaskbar": true,
-        "hiddenTitle": true,
-        "titleBarStyle": "Transparent",
-        "decorations": false
+        "titleBarStyle": "Overlay",
+        "decorations": true
       }
     ]
   }

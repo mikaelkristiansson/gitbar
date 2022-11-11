@@ -76,14 +76,18 @@ export const getUserData = async (
   token: string,
   hostname: string
 ): Promise<User> => {
-  const response = await transport.get(`https://api.${hostname}/user`, {
+  const response = await transport.get(`/api/user`, {
     Authorization: `token ${token}`,
   });
+  // const response = await transport.get(`https://api.${hostname}/user`, {
+  //   Authorization: `token ${token}`,
+  // });
 
   return {
-    id: response.data.id,
-    login: response.data.login,
-    name: response.data.name,
+    id: response.id,
+    login: response.login,
+    name: response.name,
+    // avatar_url: response.avatar_url
   };
 };
 

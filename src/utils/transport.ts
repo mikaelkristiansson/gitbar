@@ -6,13 +6,22 @@ interface ResponseData {
   data: { message: string };
 }
 
-function createError(message: string, response: { statusText: string }, json: { message: string }): RejectError {
+interface Config {
+  headers: { [key: string]: any };
+  body?: string;
+}
+
+function createError(
+  message: string,
+  response: { statusText: string },
+  json: { message: string }
+): RejectError {
   const error = new Error(message) as RejectError;
   const errorResponse: ResponseData = Object.assign(response, {
     data: {
       statusText: response.statusText,
-      message: (json && json.message) || response.statusText
-    }
+      message: (json && json.message) || response.statusText,
+    },
   });
   error.response = errorResponse;
   return error;
@@ -38,16 +47,14 @@ export async function client(
   { body, ...customConfig }: { body?: object; method: string },
   headers = {}
 ) {
-  const config = {
+  const config: Config = {
     ...customConfig,
     headers: {
-      Pragma: 'no-cache',
       'Cache-Control': 'no-cache',
       Accept: 'application/json',
       'content-type': 'application/json',
-      ...headers
+      ...headers,
     },
-    body: ''
   };
 
   if (body) {
@@ -65,7 +72,13 @@ export async function client(
   if (isStringObject(text)) {
     json = JSON.parse(text);
   }
-  return Promise.reject(createError(`Request failed with status code ${String(response.status)}`, response, json));
+  return Promise.reject(
+    createError(
+      `Request failed with status code ${String(response.status)}`,
+      response,
+      json
+    )
+  );
 }
 
 export const transport = {
@@ -73,7 +86,7 @@ export const transport = {
    * Performs a get request
    */
   get(endpoint: string, headers?: any) {
-    return client(endpoint, { method: 'GET', ...headers });
+    return client(endpoint, { method: 'GET' }, headers);
   },
 
   /**
@@ -102,5 +115,5 @@ export const transport = {
    */
   delete(endpoint: string) {
     return client(endpoint, { method: 'DELETE' });
-  }
+  },
 };
