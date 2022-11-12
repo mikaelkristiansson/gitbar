@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api';
+import { open } from '@tauri-apps/api/shell';
 import { getReviews } from '../actions/api';
 import { useAuthentication } from '../hooks/auth';
 
@@ -42,16 +43,18 @@ export default function Reviews() {
     invoke('set_review_count', { count: String(reviews.count) });
   }, [reviews.count]);
 
+  function onClick(url:string) {
+    open(url);
+  }
+
   return (
     <ul>
       {reviews.data.map(({ node }) => (
-        <li key={node.number}>
-          <a href={node.url}>
+        <li key={node.number} onClick={() => onClick(node.url)}>
             {node.repository.nameWithOwner} - {node.title}
             <span>
               #{node.number} opened on {node.createdAt} by {node.author.login}
             </span>
-          </a>
         </li>
       ))}
     </ul>
