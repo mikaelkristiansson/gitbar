@@ -9,7 +9,7 @@ import { getReviews } from '../actions/api';
 import { useAuthentication } from './auth';
 
 interface Review {
-  count: String;
+  count: number;
   data: List[];
 }
 
@@ -50,7 +50,7 @@ async function notification(text: string) {
 
 export function useGithub() {
   const [reviews, setReviews] = useState<Review>({
-    count: '-',
+    count: 0,
     data: [],
   });
   const { accounts } = useAuthentication();
@@ -59,7 +59,6 @@ export function useGithub() {
     () =>
       accounts &&
       getReviews(accounts).then((res) => {
-        console.log('res', res);
         if (res.issueCount !== reviews.count) {
           setReviews({ count: res.issueCount, data: res.edges });
         }

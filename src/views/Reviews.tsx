@@ -1,95 +1,27 @@
-import { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api';
 import { open } from '@tauri-apps/api/shell';
-import {
-  isPermissionGranted,
-  requestPermission,
-  sendNotification,
-} from '@tauri-apps/api/notification';
-import { getReviews } from '../actions/api';
-import { useAuthentication } from '../hooks/auth';
 import { useInterval } from '../hooks/use-interval';
 import { useGithub } from '../hooks/use-github';
-
-// interface Review {
-//   count: String;
-//   data: List[];
-// }
-
-interface List {
-  node: {
-    repository: {
-      nameWithOwner: string;
-    };
-    author: {
-      login: string;
-    };
-    createdAt: string;
-    number: string;
-    url: string;
-    title: string;
-    labels: {
-      nodes: Array<{
-        name: string;
-      }>;
-    };
-  };
-}
-
-// async function notification(text: string) {
-//   let permissionGranted = await isPermissionGranted();
-//   if (!permissionGranted) {
-//     const permission = await requestPermission();
-//     permissionGranted = permission === 'granted';
-//   }
-//   if (permissionGranted) {
-//     sendNotification({
-//       title: 'Gitbar',
-//       body: text,
-//       icon: 'icons/notification.png',
-//     });
-//   }
-// }
+import { HandThumbUpIcon } from '@heroicons/react/24/outline';
 
 export default function Reviews() {
   const { reviews, fetchReviews } = useGithub();
   useInterval(fetchReviews, 6000);
-  //   const [reviews, setReviews] = useState<Review>({
-  //     count: '-',
-  //     data: [],
-  //   });
-
-  //   useEffect(() => {
-  //     if (accounts) {
-  //       getReviews(accounts).then((res) =>
-  //         setReviews({ count: res.issueCount, data: res.edges })
-  //       );
-  //     }
-  //   }, [accounts]);
-
-  //   useEffect(() => {
-  //     invoke('set_review_count', { count: String(reviews.count) });
-  //   }, [reviews.count]);
-
-  //   useEffect(() => {
-  //     notification('A new PR is awaiting your review!');
-  //   }, []);
-
-  //   useInterval(() => {
-  //     if (accounts) {
-  //       getReviews(accounts).then((res) => {
-  //         if (res.issueCount !== reviews.count) {
-  //           setReviews({ count: res.issueCount, data: res.edges });
-  //         }
-  //         if (res.issueCount > reviews.count) {
-  //           notification('A new PR is awaiting your review!');
-  //         }
-  //       });
-  //     }
-  //   }, 6000);
 
   function onClick(url: string) {
     open(url);
+  }
+
+  if (reviews.count === 0) {
+    return (
+      <div className="mx-4 my-8">
+        <div className="p-4 w-full bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
+          <span className="flex items-center">
+            <HandThumbUpIcon className="w-8 h-8 pr-2" />
+            You have no reviews at the moment!
+          </span>
+        </div>
+      </div>
+    );
   }
 
   return (
