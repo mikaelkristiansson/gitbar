@@ -9,8 +9,10 @@ import { useAuthentication } from '../hooks/auth';
 export default function MainLayout() {
   const { accounts, logout } = useAuthentication();
   return (
-    <main>
-      <Outlet />
+    <>
+      <main className="mb-14">
+        <Outlet />
+      </main>
       <footer className="fixed bottom-0 left-0 border-t dark:bg-gray-800 bg-white border-gray-200 shadow-md dark:border-gray-700 w-full px-2 py-2">
         <div className="flex justify-between">
           <div className="p-2">{accounts?.user?.name}</div>
@@ -27,6 +29,6 @@ export default function MainLayout() {
           </div>
         </div>
       </footer>
-    </main>
+    </>
   );
 }
