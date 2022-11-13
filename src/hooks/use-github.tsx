@@ -66,7 +66,7 @@ export function useGithub() {
           notification('A new PR is awaiting your review!');
         }
       }),
-    [accounts]
+    [accounts, reviews.count]
   );
 
   useEffect(() => {

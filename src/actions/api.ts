@@ -1,5 +1,4 @@
 import { AuthResponse, AuthState, AuthTokenResponse, User } from '../types';
-// import { transport } from '../utils/transport';
 import { getClient, ResponseType, Body } from '@tauri-apps/api/http';
 
 export const github = {
@@ -79,7 +78,7 @@ export const getUserData = async (
   hostname: string
 ): Promise<User> => {
   const client = await getClient();
-  const response: any = await client.get(`https://${hostname}/user`, {
+  const response: any = await client.get(`https://api.${hostname}/user`, {
     responseType: ResponseType.JSON,
     headers: {
       Authorization: `token ${token}`,
@@ -174,7 +173,7 @@ export const getReviews = async (account: AuthState) => {
   };
   const client = await getClient();
   const response: any = await client.post(
-    `https://${account.hostname.replace('/v3', '')}/graphql`,
+    `https://api.${account.hostname}/graphql`,
     Body.text(JSON.stringify(body)),
     {
       headers: {

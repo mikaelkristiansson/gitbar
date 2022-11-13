@@ -19,6 +19,6 @@ export const saveState = (
 };
 
 export const clearState = (): void => {
-  invoke('set_review_count', { count: '-' });
+  invoke('set_review_count', { count: '' });
   localStorage.clear();
 };

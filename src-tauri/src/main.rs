@@ -76,7 +76,6 @@ fn main() {
   let tray_menu = SystemTrayMenu::new()
     .add_item(quit);
   let system_tray = SystemTray::new()
-    .with_title(" - ")
     .with_menu(tray_menu);
 
   tauri::Builder::default()

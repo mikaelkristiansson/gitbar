@@ -3,7 +3,6 @@ import Login from '../views/Login';
 
 const AuthenticationRoutes = {
   path: '/',
-  // element: <MinimalLayout />,
   children: [
     {
       path: '/',
