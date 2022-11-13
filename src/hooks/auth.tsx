@@ -70,7 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const validateToken = useCallback(
     async ({ token, hostname }: AuthTokenOptions) => {
-      //   await apiRequestAuth(`https://api.${hostname}/notifications`, 'HEAD', token);
       const user = await getUserData(token, hostname);
       const updatedAccounts = addAccount(accounts, token, hostname, user);
       setAccounts(updatedAccounts);

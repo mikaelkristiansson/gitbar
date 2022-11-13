@@ -85,11 +85,8 @@ export const getUserData = async (
       Authorization: `token ${token}`,
     },
   });
-  console.log('response', response);
+
   const { data } = response;
-  // const response = await transport.get(`/api/user/api.${hostname}`, {
-  //   Authorization: `token ${token}`,
-  // });
 
   return {
     id: data.id,

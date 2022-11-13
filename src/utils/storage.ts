@@ -1,4 +1,5 @@
 import { AuthState, SettingsState } from '../types';
+import { invoke } from '@tauri-apps/api';
 
 export const loadState = (): {
   accounts?: AuthState;
@@ -9,11 +10,15 @@ export const loadState = (): {
   return { accounts, settings };
 };
 
-export const saveState = (accounts: AuthState, settings: SettingsState): void => {
+export const saveState = (
+  accounts: AuthState,
+  settings: SettingsState
+): void => {
   const settingsString = JSON.stringify({ auth: accounts, settings });
   localStorage.setItem('gitbar-storage', settingsString);
 };
 
 export const clearState = (): void => {
+  invoke('set_review_count', { count: '-' });
   localStorage.clear();
 };
