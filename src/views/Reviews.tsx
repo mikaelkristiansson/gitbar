@@ -43,12 +43,12 @@ export default function Reviews() {
   }, [reviews.count]);
 
   return (
-    <ul>
+    <ul className="divide-y divide-gray-200 dark:divide-gray-700">
       {reviews.data.map(({ node }) => (
-        <li key={node.number}>
+        <li className="pb-3 sm:pb-4" key={node.number}>
           <a href={node.url}>
             {node.repository.nameWithOwner} - {node.title}
-            <span>
+            <span className="text-sm text-gray-500 truncate dark:text-gray-400">
               #{node.number} opened on {node.createdAt} by {node.author.login}
             </span>
           </a>
