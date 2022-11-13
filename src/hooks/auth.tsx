@@ -2,13 +2,14 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 import {
   addAccount,
   /* authGitHub, */
-  getToken,
+  // getToken,
   getUserData,
   github,
 } from '../actions/api';
@@ -18,10 +19,13 @@ import {
   AuthTokenOptions,
   SettingsState,
 } from '../types';
-import { clearState, saveState } from '../utils/storage';
+import { clearState, loadState, saveState } from '../utils/storage';
+
+export const defaultHost = 'api.github.com';
 
 const defaultAccounts: AuthState = {
   token: undefined,
+  hostname: defaultHost,
   user: null,
 };
 
@@ -45,6 +49,10 @@ export const authContext = createContext<Partial<AuthContext>>({});
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<AuthState>(defaultAccounts);
   const [settings, setSettings] = useState<SettingsState>(defaultSettings);
+
+  useEffect(() => {
+    restoreSettings();
+  }, []);
 
   const isLoggedIn = useMemo(() => {
     return !!accounts.token;
@@ -74,6 +82,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     setAccounts(defaultAccounts);
     clearState();
+  }, []);
+
+  const restoreSettings = useCallback(() => {
+    const existing = loadState();
+
+    if (existing.accounts) {
+      setAccounts({ ...defaultAccounts, ...existing.accounts });
+    }
+
+    if (existing.settings) {
+      setSettings({ ...defaultSettings, ...existing.settings });
+    }
   }, []);
 
   const updateSetting = useCallback(

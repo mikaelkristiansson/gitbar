@@ -12,7 +12,12 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "all": true,
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["https://**"]
+      }
     },
     "bundle": {
       "active": true,
@@ -67,9 +72,8 @@
         "width": 500,
         "visible": false,
         "skipTaskbar": true,
-        "hiddenTitle": true,
-        "titleBarStyle": "Transparent",
-        "decorations": false
+        "titleBarStyle": "Overlay",
+        "decorations": true
       }
     ]
   }

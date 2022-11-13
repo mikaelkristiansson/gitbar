@@ -2,6 +2,7 @@
 import type { RouteObject } from 'react-router-dom';
 import MainLayout from '../layouts/Main';
 import AuthGuard from '../utils/auth-guard';
+import Reviews from '../views/Reviews';
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -15,7 +16,7 @@ const MainRoutes: RouteObject = {
   children: [
     {
       path: '/',
-      element: <div>Hello</div>,
+      element: <Reviews />,
     },
     // {
     //   path: '*',
