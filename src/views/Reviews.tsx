@@ -2,6 +2,7 @@ import { open } from '@tauri-apps/api/shell';
 import { useInterval } from '../hooks/use-interval';
 import { useGithub } from '../hooks/use-github';
 import { HandThumbUpIcon } from '@heroicons/react/24/outline';
+import { dateToString } from '../utils/formatters';
 
 export default function Reviews() {
   const { reviews, fetchReviews } = useGithub();
@@ -28,7 +29,7 @@ export default function Reviews() {
     <ul className="divide-y divide-gray-200 dark:divide-gray-700">
       {reviews.data.map(({ node }) => (
         <li
-          className="p-2 hover:cursor-pointer whitespace-nowrap text-ellipsis overflow-hidden"
+          className="p-2 hover:cursor-pointer hover:bg-gray-100 hover:dark:bg-slate-800 whitespace-nowrap text-ellipsis overflow-hidden"
           key={node.number}
           onClick={() => onClick(node.url)}
         >
@@ -37,7 +38,9 @@ export default function Reviews() {
           </span>
           <br />
           <span className="text-sm text-gray-500 truncate dark:text-gray-400">
-            #{node.number} opened on {node.createdAt} by {node.author.login}
+            #{node.number} opened on{' '}
+            {dateToString(node.createdAt, 'YYYY-MM-DD h:m')} by @
+            {node.author.login}
           </span>
         </li>
       ))}

@@ -16,7 +16,7 @@ import {
 import { disable, enable, isEnabled } from '../utils/auto-start';
 import { clearState, loadState, saveState } from '../utils/storage';
 
-export const defaultHost = 'api.github.com';
+export const defaultHost = 'github.com';
 
 const defaultAccount: AuthState = {
   token: undefined,

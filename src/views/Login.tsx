@@ -12,29 +12,22 @@ export default function Login() {
   const validations: Validations = [
     ({ token }) => /^[A-Z0-9_]{40}$/i.test(token) || { token: 'Invalid token' },
     ({ token }) => isRequired(token) || { token: 'Required' },
-    // ({ hostname }) =>
-    //   /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/i.test(
-    //     hostname
-    //   ) || { hostname: 'Invalid hostname' },
+    ({ hostname }) =>
+      /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/i.test(
+        hostname
+      ) || { hostname: 'Invalid hostname' },
   ];
 
   const onSubmit = (data: Inputs) => {
     validateToken?.(data);
   };
 
-  const {
-    values,
-    isValid,
-    errors,
-    touched,
-    changeHandler,
-    blurHandler,
-    submitHandler,
-  } = useForm<Inputs>({
-    initialState,
-    validations,
-    onSubmit,
-  });
+  const { values, errors, touched, changeHandler, blurHandler, submitHandler } =
+    useForm<Inputs>({
+      initialState,
+      validations,
+      onSubmit,
+    });
 
   return (
     <div className="m-8">
@@ -101,7 +94,6 @@ export default function Login() {
         </div>
         <button
           className="w-full px-4 py-2 my-4 bg-gray-300 font-semibold rounded text-sm text-center hover:bg-gray-500 hover:text-white dark:text-black focus:outline-none"
-          disabled={!isValid}
           type="submit"
           title="Submit Button"
         >

@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "gitbar",
+    "productName": "Gitbar",
     "version": "0.1.0"
   },
   "tauri": {

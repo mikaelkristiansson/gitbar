@@ -90,16 +90,20 @@ fn main() {
           ..
       } => {
         let w = app.get_window("main").unwrap();
-        let window_size  = w.outer_size().unwrap();
-        let physical_pos = PhysicalPosition {
-          x: position.x as i32 + (size.width as i32 / 2) - (window_size.width as i32 / 2),
-          y: position.y as i32 - window_size.height as i32
-        };
-
-        let _ = w.set_position(tauri::Position::Physical(physical_pos));
-
-        w.show().unwrap();
-        w.set_focus().unwrap();
+        let visible = w.is_visible().unwrap();
+        if visible {
+          w.hide().unwrap();
+        } else {
+          let window_size  = w.outer_size().unwrap();
+          let physical_pos = PhysicalPosition {
+            x: position.x as i32 + (size.width as i32 / 2) - (window_size.width as i32 / 2),
+            y: position.y as i32 - window_size.height as i32
+          };
+  
+          let _ = w.set_position(tauri::Position::Physical(physical_pos));
+          w.show().unwrap();
+          w.set_focus().unwrap();
+        }
       }
       SystemTrayEvent::RightClick {
           position: _,

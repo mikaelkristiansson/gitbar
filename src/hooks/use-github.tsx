@@ -24,7 +24,6 @@ async function notification(text: string) {
     sendNotification({
       title: 'Gitbar',
       body: text,
-      icon: 'icons/notification.png',
     });
   }
 }
