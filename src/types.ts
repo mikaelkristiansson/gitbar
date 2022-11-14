@@ -22,27 +22,30 @@ export enum Appearance {
   DARK = 'DARK',
 }
 
-export type RadioGroupItem = {
-  label: string;
-  value: string;
-};
-
-export interface AuthOptions {
-  hostname: string;
-  clientId?: string;
-  clientSecret?: string;
-}
-
 export interface AuthTokenOptions {
   hostname: string;
   token: string;
 }
 
-export interface AuthResponse {
-  authCode: string;
-  authOptions: AuthOptions;
-}
-export interface AuthTokenResponse {
-  hostname: string;
-  token: string;
+export interface Review {
+  issueCount: number;
+  edges: Array<{
+    node: {
+      repository: {
+        nameWithOwner: string;
+      };
+      author: {
+        login: string;
+      };
+      createdAt: string;
+      number: string;
+      url: string;
+      title: string;
+      labels: {
+        nodes: Array<{
+          name: string;
+        }>;
+      };
+    };
+  }>;
 }

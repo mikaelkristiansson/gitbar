@@ -18,10 +18,6 @@ const MainRoutes: RouteObject = {
       path: '/',
       element: <Reviews />,
     },
-    // {
-    //   path: '*',
-    //   element: <AccessDenied />,
-    // },
   ],
 };
 

@@ -62,7 +62,7 @@
       "active": false
     },
     "systemTray": {
-      "iconPath": "icons/icon.png",
+      "iconPath": "icons/tray.png",
       "iconAsTemplate": true,
       "menuOnLeftClick": false
     },

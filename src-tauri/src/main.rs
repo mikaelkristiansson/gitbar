@@ -6,6 +6,9 @@
 use tauri::Manager;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, PhysicalPosition};
 
+mod auto_start;
+use auto_start::MacosLauncher;
+
 #[cfg(target_os = "macos")]
 use cocoa::appkit::{NSWindow, NSWindowButton, NSWindowStyleMask, NSWindowTitleVisibility};
 
@@ -127,7 +130,7 @@ fn main() {
           api.prevent_close();
       }
       tauri::WindowEvent::Focused(false) => {
-          // hide the window automaticall when the user
+          // hide the window automatically when the user
           // clicks out. this is for a matter of taste.
           event.window().hide().unwrap();
       }
@@ -136,9 +139,13 @@ fn main() {
     .invoke_handler(tauri::generate_handler![
       set_review_count
     ])
+    .plugin(auto_start::init(
+      MacosLauncher::LaunchAgent,
+      None,
+    ))
     .setup(|app| {
-      // don't show on the taskbar/springboard
       #[cfg(target_os = "macos")]
+      // don't show on the taskbar/springboard
       app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
       let window = app.get_window("main").unwrap();

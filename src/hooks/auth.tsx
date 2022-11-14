@@ -6,24 +6,19 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  addAccount,
-  /* authGitHub, */
-  // getToken,
-  getUserData,
-  github,
-} from '../actions/api';
+import { addAccount, getUserData } from '../actions/api';
 import {
   Appearance,
   AuthState,
   AuthTokenOptions,
   SettingsState,
 } from '../types';
+import { disable, enable, isEnabled } from '../utils/auto-start';
 import { clearState, loadState, saveState } from '../utils/storage';
 
 export const defaultHost = 'api.github.com';
 
-const defaultAccounts: AuthState = {
+const defaultAccount: AuthState = {
   token: undefined,
   hostname: defaultHost,
   user: null,
@@ -35,7 +30,7 @@ export const defaultSettings: SettingsState = {
 };
 
 interface AuthContext {
-  accounts: AuthState;
+  account: AuthState;
   isLoggedIn: boolean;
   login: () => void;
   validateToken: (data: AuthTokenOptions) => void;
@@ -47,47 +42,38 @@ interface AuthContext {
 export const authContext = createContext<Partial<AuthContext>>({});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [accounts, setAccounts] = useState<AuthState>(defaultAccounts);
+  const [account, setAccount] = useState<AuthState>(defaultAccount);
   const [settings, setSettings] = useState<SettingsState>(defaultSettings);
 
   useEffect(() => {
     restoreSettings();
+    isEnabled().then((res) => console.log('rrr', res));
   }, []);
 
   const isLoggedIn = useMemo(() => {
-    return !!accounts.token;
-  }, [accounts]);
-
-  // const login = useCallback(async () => {
-  //   const { authCode } = await authGitHub();
-  //   const { token } = await getToken(authCode);
-  //   const { hostname } = github.DEFAULT_AUTH_OPTIONS;
-  //   const user = await getUserData(token, hostname);
-  //   const updatedAccounts = addAccount(accounts, token, hostname, user);
-  //   setAccounts(updatedAccounts);
-  //   saveState(updatedAccounts, settings);
-  // }, [accounts, settings]);
+    return !!account.token;
+  }, [account]);
 
   const validateToken = useCallback(
     async ({ token, hostname }: AuthTokenOptions) => {
       const user = await getUserData(token, hostname);
-      const updatedAccounts = addAccount(accounts, token, hostname, user);
-      setAccounts(updatedAccounts);
-      saveState(updatedAccounts, settings);
+      const updatedAccount = addAccount(account, token, hostname, user);
+      setAccount(updatedAccount);
+      saveState(updatedAccount, settings);
     },
-    [accounts, settings]
+    [account, settings]
   );
 
   const logout = useCallback(() => {
-    setAccounts(defaultAccounts);
+    setAccount(defaultAccount);
     clearState();
   }, []);
 
   const restoreSettings = useCallback(() => {
     const existing = loadState();
 
-    if (existing.accounts) {
-      setAccounts({ ...defaultAccounts, ...existing.accounts });
+    if (existing.account) {
+      setAccount({ ...defaultAccount, ...existing.account });
     }
 
     if (existing.settings) {
@@ -98,21 +84,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateSetting = useCallback(
     (name: keyof SettingsState, value: boolean | Appearance) => {
       if (name === 'openAtStartup') {
-        // setAutoLaunch(value as boolean);
+        switch (value as boolean) {
+          case true:
+            enable();
+          case false:
+            disable();
+        }
       }
 
       const newSettings = { ...settings, [name]: value };
       setSettings(newSettings);
-      saveState(accounts, newSettings);
+      saveState(account, newSettings);
     },
-    [accounts, settings]
+    [account, settings]
   );
 
   const value = useMemo(
     () => ({
-      accounts,
+      account,
       isLoggedIn,
-      // login,
       validateToken,
       logout,
       settings,

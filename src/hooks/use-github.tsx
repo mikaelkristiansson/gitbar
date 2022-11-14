@@ -6,31 +6,12 @@ import {
 } from '@tauri-apps/api/notification';
 import { useCallback, useEffect, useState } from 'react';
 import { getReviews } from '../actions/api';
+import { Review } from '../types';
 import { useAuthentication } from './auth';
 
-interface Review {
+interface Reviews {
   count: number;
-  data: List[];
-}
-
-interface List {
-  node: {
-    repository: {
-      nameWithOwner: string;
-    };
-    author: {
-      login: string;
-    };
-    createdAt: string;
-    number: string;
-    url: string;
-    title: string;
-    labels: {
-      nodes: Array<{
-        name: string;
-      }>;
-    };
-  };
+  data: Review['edges'];
 }
 
 async function notification(text: string) {
@@ -49,16 +30,16 @@ async function notification(text: string) {
 }
 
 export function useGithub() {
-  const [reviews, setReviews] = useState<Review>({
+  const [reviews, setReviews] = useState<Reviews>({
     count: 0,
     data: [],
   });
-  const { accounts } = useAuthentication();
+  const { account } = useAuthentication();
 
   const fetchReviews = useCallback(
     () =>
-      accounts &&
-      getReviews(accounts).then((res) => {
+      account &&
+      getReviews(account).then((res) => {
         if (res.issueCount !== reviews.count) {
           setReviews({ count: res.issueCount, data: res.edges });
         }
@@ -66,16 +47,16 @@ export function useGithub() {
           notification('A new PR is awaiting your review!');
         }
       }),
-    [accounts, reviews.count]
+    [account, reviews.count]
   );
 
   useEffect(() => {
-    if (accounts) {
-      getReviews(accounts).then((res) =>
+    if (account) {
+      getReviews(account).then((res) =>
         setReviews({ count: res.issueCount, data: res.edges })
       );
     }
-  }, [accounts]);
+  }, [account]);
 
   useEffect(() => {
     invoke('set_review_count', { count: String(reviews.count) });
