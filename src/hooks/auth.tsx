@@ -13,7 +13,7 @@ import {
   AuthTokenOptions,
   SettingsState,
 } from '../types';
-import { disable, enable, isEnabled } from '../utils/auto-start';
+import { disable, enable } from '../utils/auto-start';
 import { clearState, loadState, saveState } from '../utils/storage';
 
 export const defaultHost = 'github.com';
@@ -47,7 +47,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     restoreSettings();
-    isEnabled().then((res) => console.log('rrr', res));
   }, []);
 
   const isLoggedIn = useMemo(() => {

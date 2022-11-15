@@ -13,6 +13,7 @@ type Result<T> = std::result::Result<T, Error>;
 #[derive(Debug, Copy, Clone)]
 pub enum MacosLauncher {
   LaunchAgent,
+  AppleScript,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -96,8 +97,8 @@ pub fn init<R: Runtime>(
     .invoke_handler(tauri::generate_handler![enable, disable, is_enabled])
     .setup(move |app| {
       let mut builder = AutoLaunchBuilder::new();
-
-      builder.set_app_name(&app.package_info().name);
+      let app_name = &app.package_info().name;
+      builder.set_app_name(app_name);
       if let Some(args) = args {
         builder.set_args(&args);
       }
