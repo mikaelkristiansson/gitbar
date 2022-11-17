@@ -1,5 +1,7 @@
 # Gitbar
 
+![image](./docs/app.png)
+
 ## Requirements:
 
 [here](https://tauri.app/v1/guides/getting-started/prerequisites)
