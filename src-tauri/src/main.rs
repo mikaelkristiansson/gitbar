@@ -64,11 +64,11 @@ impl<R: Runtime> WindowExt for Window<R> {
     }
 }
 
-#[cfg(target_os = "macos")]
 #[tauri::command]
 fn set_review_count(app_handle: tauri::AppHandle, count: &str) {
   let mut rev_count = count.to_string();
   rev_count.insert_str(0, " ");
+  #[cfg(target_os = "macos")]
   app_handle
   .tray_handle()
   .set_title(&rev_count)
@@ -141,12 +141,7 @@ fn main() {
       }
       _ => {}
     })
-    .invoke_handler(
-      #[cfg(target_os = "macos")]
-      tauri::generate_handler![
-        set_review_count
-      ]
-  )
+    .invoke_handler(tauri::generate_handler![set_review_count])
     .plugin(auto_start::init(
       MacosLauncher::LaunchAgent,
       None,
