@@ -64,9 +64,9 @@ impl<R: Runtime> WindowExt for Window<R> {
     }
 }
 
+#[cfg(target_os = "macos")]
 #[tauri::command]
 fn set_review_count(app_handle: tauri::AppHandle, count: &str) {
-  #[cfg(target_os = "macos")]
   let mut rev_count = count.to_string();
   rev_count.insert_str(0, " ");
   app_handle
