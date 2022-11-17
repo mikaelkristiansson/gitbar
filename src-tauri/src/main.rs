@@ -68,6 +68,7 @@ impl<R: Runtime> WindowExt for Window<R> {
 fn set_review_count(app_handle: tauri::AppHandle, count: &str) {
   let mut rev_count = count.to_string();
   rev_count.insert_str(0, " ");
+  #[cfg(target_os = "macos")]
   app_handle
   .tray_handle()
   .set_title(&rev_count)
@@ -140,9 +141,7 @@ fn main() {
       }
       _ => {}
     })
-    .invoke_handler(tauri::generate_handler![
-      set_review_count
-    ])
+    .invoke_handler(tauri::generate_handler![set_review_count])
     .plugin(auto_start::init(
       MacosLauncher::LaunchAgent,
       None,
@@ -153,7 +152,7 @@ fn main() {
       app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
       let window = app.get_window("main").unwrap();
-      
+      #[cfg(target_os = "macos")]
       window.set_transparent_titlebar(true, true);
 
       // this is a workaround for the window to always show in current workspace.
