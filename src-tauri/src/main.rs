@@ -153,7 +153,7 @@ fn main() {
       app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
       let window = app.get_window("main").unwrap();
-      
+      #[cfg(target_os = "macos")]
       window.set_transparent_titlebar(true, true);
 
       // this is a workaround for the window to always show in current workspace.
