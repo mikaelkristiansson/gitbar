@@ -141,9 +141,12 @@ fn main() {
       }
       _ => {}
     })
-    .invoke_handler(tauri::generate_handler![
-      set_review_count
-    ])
+    .invoke_handler(
+      #[cfg(target_os = "macos")]
+      tauri::generate_handler![
+        set_review_count
+      ]
+  )
     .plugin(auto_start::init(
       MacosLauncher::LaunchAgent,
       None,
