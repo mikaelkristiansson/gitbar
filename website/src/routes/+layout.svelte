@@ -3,6 +3,10 @@
   import '../app.css'
   import Revealed from './Revealed.svelte'
   import { base } from '$app/paths'
+
+  function removeTrailingSlash(str: string) {
+    return str.replace(/\/+$/, '');
+  }
 </script>
 
 <svelte:head>
@@ -41,8 +45,8 @@
   <Revealed class="mx-1.5" options={{ opacity: 0, y: -10, duration: 1000, delay: 500 }}>
     <a
       class="mx-1.5 py-2 text-sm transition-colors duration-200 ease-md hover:text-white sm:text-base"
-      class:font-medium={$page.url.pathname === base}
-      class:text-white={$page.url.pathname === base}
+      class:font-medium={removeTrailingSlash($page.url.pathname) === base}
+      class:text-white={removeTrailingSlash($page.url.pathname) === base}
       href={`${base}/`}>Overview</a
     >
     <a
