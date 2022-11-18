@@ -1,6 +1,7 @@
 <script lang="ts">
   import Revealed from './Revealed.svelte'
   import Download from './Download.svelte'
+  import { base } from '$app/paths'
 </script>
 
 <svelte:head>
@@ -37,8 +38,8 @@
 >
   <div class="gradient gradient-1 show-gradient absolute inset-0 -z-10 blur-[160px]" />
   <div class="relative">
-    <img src="/tray.png" class=" m-auto -mb-12" alt="gitbar tray" />
-    <img src="/screenshot.png" alt="gitbar screenshot" />
+    <img src={`${base}/tray.png`} class=" m-auto -mb-12" alt="gitbar tray" />
+    <img src={`${base}/screenshot.png`} alt="gitbar screenshot" />
   </div>
 </Revealed>
 <Revealed
@@ -47,7 +48,7 @@
 >
   <div class="gradient gradient-2 absolute inset-0 -z-10 blur-[160px]" />
   <div class="relative">
-    <img src="/screenshot-light.png" alt="gitbar screenshot" />
+    <img src={`${base}/screenshot-light.png`} alt="gitbar screenshot" />
   </div>
 </Revealed>
 

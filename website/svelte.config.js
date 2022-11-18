@@ -20,6 +20,9 @@ const config = {
   preprocess: [preprocess(), mdsvex(mdsvexConfig)],
 
   kit: {
+    paths: {
+      base: '/gitbar',
+    },
     adapter: adapter(),
   },
 }

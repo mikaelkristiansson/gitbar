@@ -2,6 +2,7 @@
   import { page } from '$app/stores'
   import '../app.css'
   import Revealed from './Revealed.svelte'
+  import { base } from '$app/paths'
 </script>
 
 <svelte:head>
@@ -30,7 +31,7 @@
 >
   <Revealed class="sm:w-32" options={{ opacity: 0, x: -10, duration: 1000, delay: 300 }}>
     <a
-      href="/"
+      href={`${base}/`}
       class="flex items-center text-lg font-medium text-white ease-md sm:p-1.5 sm:text-xl"
       style="-webkit-tap-highlight-color: hsla(0, 0%, 100%, 0.1);"
     >
@@ -40,15 +41,15 @@
   <Revealed class="mx-1.5" options={{ opacity: 0, y: -10, duration: 1000, delay: 500 }}>
     <a
       class="mx-1.5 py-2 text-sm transition-colors duration-200 ease-md hover:text-white sm:text-base"
-      class:font-medium={$page.url.pathname === '/'}
-      class:text-white={$page.url.pathname === '/'}
-      href="/">Overview</a
+      class:font-medium={$page.url.pathname === base}
+      class:text-white={$page.url.pathname === base}
+      href={`${base}/`}>Overview</a
     >
     <a
       class="mx-1.5 py-2 text-sm transition-colors duration-200 ease-md hover:text-white sm:text-base"
-      class:font-medium={$page.url.pathname === '/changelog'}
-      class:text-white={$page.url.pathname === '/changelog'}
-      href="/changelog">Changelog</a
+      class:font-medium={$page.url.pathname === base +'/changelog'}
+      class:text-white={$page.url.pathname === base +'/changelog'}
+      href={`${base}/changelog`}>Changelog</a
     >
   </Revealed>
   <Revealed
