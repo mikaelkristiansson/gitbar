@@ -54,7 +54,6 @@
 <style lang="sass">
   h1
     background: linear-gradient(130deg,#ff7b72 10%,#600600 90%)
-    // background: linear-gradient(130deg,#09cff6 10%,#3159f6 90%)
     background-clip: text
     text-fill-color: transparent
     -webkit-text-fill-color: transparent
@@ -75,6 +74,4 @@
       opacity: 0.9
     100%
       opacity: 0.7
-  .ripple
-    box-shadow: 0px 0px 0px 1px hsla(0, 0%, 100%, 0.1), 0px 0px 0px 4px hsla(0, 0%, 100%, 0.15)
 </style>
