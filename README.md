@@ -1,32 +1,30 @@
-# Gitbar
+<h1 align="center">GitBar</h1>
+<p align="center"><img src="./app-icon.png" width="60" height="60" alt="app icon" />
+</p>
+
+An system tray app for showing your pull requested reviews.
 
 ![image](./docs/app.png)
 
-## Requirements:
+## Development instructions
 
-[here](https://tauri.app/v1/guides/getting-started/prerequisites)
+### Requirements
 
-## Instructions
+[Tauri getting started](https://tauri.app/v1/guides/getting-started/prerequisites)
 
-1- install dependencies
+### Instructions
 
 ```sh
+# 1 - install dependencies
 yarn
-```
 
-2- Run the App in development mode:
-
-```sh
+# 2 - Run the App in development mode
 yarn tauri:dev
 ```
 
-note that the first run will take time as tauri download and compile dependencies.
+> note that the first run will take time as tauri download and compile dependencies.
 
-## Production
-
-when you are happy with the results and ready to ship your app.
-
-run:
+### Production
 
 ```sh
 yarn tauri:build
