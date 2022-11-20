@@ -1,10 +1,10 @@
 [package]
 name = "gitbar"
-version = "0.1.1"
+version = "0.2.0"
 description = "Github review counter"
 authors = ["mikael.kristiansson"]
-license = ""
-repository = ""
+license = "MIT"
+repository = "https://github.com/mikaelkristiansson/gitbar"
 default-run = "gitbar"
 edition = "2021"
 rust-version = "1.57"

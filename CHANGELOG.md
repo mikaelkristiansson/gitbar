@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+### Features
+* rework application from react to svelte (reduce bundle size)
+* add `settings` fetch interval (define how long between updating review list)
+
 ## 0.1.1
 * remove allow all in tauri config
 
