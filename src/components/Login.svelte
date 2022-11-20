@@ -82,7 +82,7 @@
           placeholder="The 40 characters token generated on GitHub"
         />
         {#if errors?.token?.required?.error}
-          <p class="error-message">Token is required</p>
+          <p class="text-red-500 dark:text-red-300">Token is required</p>
         {/if}
       </div>
       <span class="text-sm">
@@ -113,7 +113,7 @@
           class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         />
         {#if errors?.hostname?.required?.error}
-          <p class="error-message">Password is required</p>
+          <p class="text-red-500 dark:text-red-300">Password is required</p>
         {/if}
       </div>
       <span class="text-sm">
