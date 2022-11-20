@@ -12,14 +12,15 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true,
       "http": {
-        "all": true,
         "request": true,
         "scope": ["https://**"]
       },
       "notification": {
         "all": true
+      },
+      "shell": {
+        "open": true
       }
     },
     "bundle": {

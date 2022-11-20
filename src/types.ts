@@ -14,6 +14,7 @@ export interface AuthState {
 export interface SettingsState {
   openAtStartup: boolean;
   appearance: Appearance;
+  fetchInterval: number;
 }
 
 export enum Appearance {
