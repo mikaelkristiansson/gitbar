@@ -38,25 +38,26 @@ const signOut = () => {
   clearState();
 };
 
-const updateSettings = (
-  name: keyof SettingsState,
-  value: boolean | Appearance
-) => {
-  if (name === 'openAtStartup') {
-    switch (value as boolean) {
+const updateSettings = (data: SettingsState) => {
+  if (data['openAtStartup']) {
+    switch (data['openAtStartup'] as boolean) {
       case true:
         enable();
       case false:
         disable();
     }
   }
-  auth.update((prevAuth) => ({
-    ...prevAuth,
-    settings: {
+  auth.update((prevAuth) => {
+    const newSettings = {
       ...prevAuth.settings,
-      [name]: value,
-    },
-  }));
+      ...data,
+    };
+    saveState(prevAuth.account, newSettings);
+    return {
+      ...prevAuth,
+      settings: newSettings,
+    };
+  });
 };
 
 const prevState = loadState();

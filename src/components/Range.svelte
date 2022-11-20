@@ -250,11 +250,7 @@
   }
 
   .range__track--highlighted {
-    background-color: var(--track-highlight-bgcolor, #6185ff);
-    background: var(
-      --track-highlight-bg,
-      linear-gradient(90deg, #6185ff, #9c65ff)
-    );
+    @apply bg-blue-600;
     width: 0;
     height: 6px;
     position: absolute;
@@ -290,14 +286,13 @@
   .range__tooltip {
     pointer-events: none;
     position: absolute;
-    top: -33px;
+    top: -36px;
     color: var(--tooltip-text, white);
     width: 38px;
     padding: 4px 0;
     border-radius: 4px;
     text-align: center;
-    background-color: var(--tooltip-bgcolor, #6185ff);
-    background: var(--tooltip-bg, linear-gradient(45deg, #6185ff, #9c65ff));
+    @apply bg-blue-600;
   }
 
   .range__tooltip::after {
@@ -306,7 +301,7 @@
     position: absolute;
     height: 7px;
     width: 7px;
-    background-color: var(--tooltip-bgcolor, #6185ff);
+    @apply bg-blue-600;
     bottom: -3px;
     left: calc(50% - 3px);
     clip-path: polygon(0% 0%, 100% 100%, 0% 100%);

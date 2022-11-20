@@ -1,13 +1,13 @@
 <script lang="ts">
-  export let visible = false;
+  export let modalVisible = false;
   let modalBg: HTMLDivElement;
   let lastFocus: Element | null;
-  $: if (visible) {
+  $: if (modalVisible) {
     lastFocus = document.activeElement;
   } else if (lastFocus instanceof HTMLElement) {
     lastFocus.focus();
   }
-  $: if (visible && modalBg) {
+  $: if (modalVisible && modalBg) {
     modalBg.focus();
     const firstInput = modalBg.querySelector('input, textarea');
     if (firstInput instanceof HTMLElement) {
@@ -15,11 +15,11 @@
     }
   }
   function close() {
-    visible = false;
+    modalVisible = false;
   }
 </script>
 
-{#if visible}
+{#if modalVisible}
   <div
     class="fixed w-full h-full top-0 left-0 flex items-center justify-center p-5 bg-black/50 z-50"
     on:click|self={close}

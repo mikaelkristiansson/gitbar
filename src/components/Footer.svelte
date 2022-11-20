@@ -9,7 +9,8 @@
   import Range from './Range.svelte';
 
   let fetching = false;
-  let visible = false;
+  let modalVisible = false;
+  let openAtStartup = $auth.settings?.openAtStartup;
   let fetchInterval =
     ($auth.settings.fetchInterval || defaultSettings.fetchInterval) / 1000;
   let app = { name: '', version: '' };
@@ -23,13 +24,21 @@
 
   function keydown(e: KeyboardEvent) {
     if (e.key === 'Escape' && e.target) {
-      visible = false;
+      modalVisible = false;
       e.preventDefault();
     }
   }
 
   const changeAutoStart = (e) => {
-    $auth.updateSettings('openAtStartup', e.target.checked);
+    openAtStartup = e.target.checked;
+  };
+
+  const onSave = () => {
+    $auth.updateSettings({
+      openAtStartup,
+      fetchInterval: fetchInterval * 1000,
+    });
+    modalVisible = false;
   };
 
   onMount(() => {
@@ -84,7 +93,7 @@
           />
         </svg>
       </button>
-      <button class="p-2" on:click={() => (visible = true)}>
+      <button class="p-2" on:click={() => (modalVisible = true)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -120,7 +129,7 @@
   </div>
 </footer>
 
-<Modal bind:visible on:keydown={keydown}>
+<Modal bind:modalVisible on:keydown={keydown}>
   <div
     class="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-600"
   >
@@ -130,7 +139,7 @@
     <button
       type="button"
       class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-      on:click={() => (visible = false)}
+      on:click={() => (modalVisible = false)}
     >
       <svg
         aria-hidden="true"
@@ -151,7 +160,7 @@
   <div class="p-6 space-y-6">
     <Toggle
       name="open_at_start"
-      checked={$auth.settings?.openAtStartup}
+      checked={openAtStartup}
       label="Auto start Gitbar"
       on:change={changeAutoStart}
     />
@@ -168,6 +177,14 @@
           initialValue={fetchInterval}
           id="fetch_interval"
         />
+      </div>
+      <div class="relative mt-4 flex items-end justify-end">
+        <button
+          type="button"
+          on:click={onSave}
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          >Save</button
+        >
       </div>
     </div>
     <span class="text-sm font-bold italic float-right pb-2">
