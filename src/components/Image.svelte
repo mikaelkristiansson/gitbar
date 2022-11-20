@@ -18,6 +18,10 @@
 
     img.src = src;
 
+    img.onload = () => {
+      loading = false;
+    };
+
     img.onerror = () => {
       error = true;
     };
@@ -44,10 +48,6 @@
 />
 
 <style>
-  img {
-    width: 100%;
-  }
-
   img.loading {
     opacity: 0;
   }

@@ -40,7 +40,6 @@
     });
     modalVisible = false;
   };
-
   onMount(() => {
     Promise.all([getName(), getVersion()]).then((values) => {
       const [name, version] = values;
@@ -76,7 +75,7 @@
       </Image>
       <span class="ml-1 block truncate">{$auth.account?.user?.name}</span>
     </div>
-    <div>
+    <div class="flex justify-between">
       <button class="p-2" on:click={startFetch}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

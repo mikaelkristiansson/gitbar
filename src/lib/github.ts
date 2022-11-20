@@ -28,7 +28,6 @@ async function notification(text: string) {
 }
 
 const fetchReviews = async (account: AuthState) => {
-  console.log('fetch');
   const res = await getReviews(account);
   let prevCount: number;
   github.subscribe(({ reviews }) => (prevCount = reviews.count));
