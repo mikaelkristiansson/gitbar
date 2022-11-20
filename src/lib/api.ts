@@ -1,4 +1,4 @@
-import { AuthState, Review, User } from '../types';
+import type { AuthState, Review, User } from '../types';
 import { getClient, ResponseType, Body } from '@tauri-apps/api/http';
 
 export const getUserData = async (

@@ -1,4 +1,4 @@
-import { AuthState, SettingsState } from '../types';
+import type { AuthState, SettingsState } from '../types';
 import { invoke } from '@tauri-apps/api';
 
 export const loadState = (): {

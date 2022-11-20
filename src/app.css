@@ -1,6 +1,20 @@
+/* Write your global styles here, in PostCSS syntax */
 @tailwind base;
-
-[multiple], [type=date], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=time], [type=url], [type=week], select, textarea {
+[multiple],
+[type='date'],
+[type='datetime-local'],
+[type='email'],
+[type='month'],
+[type='number'],
+[type='password'],
+[type='search'],
+[type='tel'],
+[type='text'],
+[type='time'],
+[type='url'],
+[type='week'],
+select,
+textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -17,6 +31,5 @@
   --tw-shadow: 0 0 #0000;
   outline: none;
 }
-
 @tailwind components;
 @tailwind utilities;
