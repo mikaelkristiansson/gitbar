@@ -1,5 +1,5 @@
 <script lang="ts">
-  const defaultHost = 'github.com';
+  import { open } from '@tauri-apps/api/shell';
   import {
     Validators,
     type ValidatorFn,
@@ -7,6 +7,7 @@
   } from '../lib/validators';
   import { auth } from '../lib/auth';
 
+  const defaultHost = 'github.com';
   let errors: { [inputName: string]: ValidatorResult } = {};
 
   let form: {
@@ -77,22 +78,30 @@
           type="text"
           name="token"
           id="token"
-          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          class="
+          block
+          w-full
+          rounded-md
+          text-gray-900
+          border-gray-300
+          shadow-sm
+          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+        "
           on:blur={onBlur}
           placeholder="The 40 characters token generated on GitHub"
         />
-        {#if errors?.token?.required?.error}
-          <p class="text-red-500 dark:text-red-300">Token is required</p>
-        {/if}
       </div>
+      {#if errors?.token?.required?.error}
+        <p class="text-red-400 dark:text-red-300">Token is required</p>
+      {/if}
       <span class="text-sm">
         To generate a token, go to GitHub,
-        <a
+        <button
           class="underline hover:text-gray-500 dark:hover:text-gray-300 cursor-pointer"
-          href="https://github.com/settings/tokens"
+          on:click={() => open('https://github.com/settings/tokens')}
         >
           personal access tokens
-        </a>
+        </button>
       </span>
     </div>
     <div class="pb-2">
@@ -110,12 +119,20 @@
           id="hostname"
           value={defaultHost}
           on:blur={onBlur}
-          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          class="
+          block
+          w-full
+          rounded-md
+          border-gray-300
+          text-gray-900
+          shadow-sm
+          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+          "
         />
-        {#if errors?.hostname?.required?.error}
-          <p class="text-red-500 dark:text-red-300">Password is required</p>
-        {/if}
       </div>
+      {#if errors?.hostname?.required?.error}
+        <p class="text-red-400 dark:text-red-300">Password is required</p>
+      {/if}
       <span class="text-sm">
         Defaults to {defaultHost}. Change only if you are using GitHub for
         Enterprise.
