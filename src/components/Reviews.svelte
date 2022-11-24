@@ -21,7 +21,7 @@
 {#if $github.reviews.count === 0}
   <div class="mx-4 my-8">
     <div
-      class="p-4 w-full bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700"
+      class="p-4 w-full bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-slate-900"
     >
       <span class="flex items-center">
         <svg
@@ -43,23 +43,50 @@
     </div>
   </div>
 {:else}
-  <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-    {#each $github.reviews.data as review}
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <li
-        class="p-2 hover:cursor-pointer hover:bg-gray-100 hover:dark:bg-slate-800 whitespace-nowrap text-ellipsis overflow-hidden"
-        on:click={() => onClick(review.node.url)}
-      >
-        <span class="dark:text-white text-gray-900">
-          {review.node.repository.nameWithOwner} - {review.node.title}
-        </span>
-        <br />
-        <span class="text-sm text-gray-500 truncate dark:text-gray-400">
-          #{review.node.number} opened on{' '}
-          {dateToString(review.node.createdAt, 'YYYY-MM-DD h:m')} by @
-          {review.node.author.login}
-        </span>
-      </li>
-    {/each}
-  </ul>
+  <div class="mb-14">
+    <ul class="divide-y divide-gray-200 dark:divide-slate-900">
+      {#each $github.reviews.data as review}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <li
+          class="p-2 hover:cursor-pointer hover:bg-gray-100 hover:dark:bg-gray-900"
+          on:click={() => onClick(review.node.url)}
+        >
+          <div class="flex">
+            <div class="flex-shrink-0 pr-1">
+              <span aria-label="Open pull request">
+                <svg
+                  class="fill-green-500 inline-block overflow-visible align-text-bottom"
+                  viewBox="0 0 16 16"
+                  version="1.1"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  ><path
+                    fill-rule="evenodd"
+                    d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"
+                  /></svg
+                >
+              </span>
+            </div>
+            <div class="whitespace-nowrap text-ellipsis overflow-hidden">
+              <span
+                class="dark:text-white text-gray-900 hover:text-blue-700 dark:hover:text-blue-600 font-bold"
+              >
+                <span class="text-slate-500 dark:text-gray-300"
+                  >{review.node.repository.nameWithOwner}</span
+                >
+                <span class="">{review.node.title}</span>
+              </span>
+              <br />
+              <span class="text-sm text-gray-500 truncate dark:text-gray-400">
+                #{review.node.number} opened on{' '}
+                {dateToString(review.node.createdAt, 'YYYY-MM-DD h:m')} by @{review
+                  .node.author.login}
+              </span>
+            </div>
+          </div>
+        </li>
+      {/each}
+    </ul>
+  </div>
 {/if}

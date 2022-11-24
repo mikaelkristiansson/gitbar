@@ -3,8 +3,8 @@
   import { fly, fade } from 'svelte/transition';
 
   // Props
-  export let min = 5;
-  export let max = 60;
+  export let min = 0;
+  export let max = 100;
   export let initialValue = 0;
   export let id = null;
   export let value =
@@ -245,8 +245,10 @@
 
   .range__track {
     height: 6px;
-    background-color: var(--track-bgcolor, #d0d0d0);
+    /* background-color: var(--track-bgcolor, #d0d0d0); */
+    @apply bg-slate-500/60;
     border-radius: 999px;
+    cursor: pointer;
   }
 
   .range__track--highlighted {
@@ -265,7 +267,7 @@
     width: 20px;
     height: 20px;
     background-color: var(--thumb-bgcolor, white);
-    cursor: pointer;
+    cursor: grab;
     border-radius: 999px;
     margin-top: -8px;
     transition: box-shadow 100ms;
@@ -277,7 +279,8 @@
     );
   }
 
-  .range__thumb--holding {
+  .range__thumb--holding,
+  .range__thumb:hover {
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14),
       0 1px 2px 1px rgba(0, 0, 0, 0.2),
       0 0 0 6px var(--thumb-holding-outline, rgba(113, 119, 250, 0.3));

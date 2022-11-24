@@ -77,7 +77,7 @@
           type="text"
           name="token"
           id="token"
-          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           on:blur={onBlur}
           placeholder="The 40 characters token generated on GitHub"
         />
@@ -110,7 +110,7 @@
           id="hostname"
           value={defaultHost}
           on:blur={onBlur}
-          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
         />
         {#if errors?.hostname?.required?.error}
           <p class="text-red-500 dark:text-red-300">Password is required</p>
@@ -122,7 +122,7 @@
       </span>
     </div>
     <button
-      class="w-full px-4 py-2 my-4 bg-gray-300 font-semibold rounded text-sm text-center hover:bg-gray-500 hover:text-white dark:text-black focus:outline-none"
+      class="w-full text-white font-bold bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md text-sm px-4 py-2 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       type="submit"
       title="Submit Button"
     >

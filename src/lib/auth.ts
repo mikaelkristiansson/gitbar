@@ -39,6 +39,7 @@ const signOut = () => {
 };
 
 const updateSettings = (data: SettingsState) => {
+  console.log(data);
   if (data['openAtStartup']) {
     switch (data['openAtStartup'] as boolean) {
       case true:

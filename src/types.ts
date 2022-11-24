@@ -18,9 +18,8 @@ export interface SettingsState {
 }
 
 export enum Appearance {
-  SYSTEM = 'SYSTEM',
-  LIGHT = 'LIGHT',
-  DARK = 'DARK',
+  light = 'light',
+  dark = 'dark',
 }
 
 export interface AuthTokenOptions {
