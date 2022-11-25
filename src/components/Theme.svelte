@@ -3,7 +3,6 @@
   let dark = $appearance.theme === 'dark';
   appearance.subscribe(({ theme }) => {
     dark = theme === 'dark';
-    console.log('$appearance.theme', theme);
   });
 </script>
 
