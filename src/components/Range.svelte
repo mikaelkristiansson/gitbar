@@ -245,7 +245,6 @@
 
   .range__track {
     height: 6px;
-    /* background-color: var(--track-bgcolor, #d0d0d0); */
     @apply bg-slate-500/60;
     border-radius: 999px;
     cursor: pointer;
