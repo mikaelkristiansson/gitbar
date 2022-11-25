@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0
+
+### Features
+* you can now toggle the theme
+
+### Fix
+* add space at bottom to show complete review list
+* change styling to look like github
+* on logout, delete all store data
+
 ## 0.2.0
 ### Features
 * rework application from react to svelte (reduce bundle size)

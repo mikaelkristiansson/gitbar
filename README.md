@@ -4,7 +4,7 @@
 
 An system tray app for showing your pull requested reviews.
 
-![image](./docs/app.png)
+![image](./website/static/screenshot.png)
 
 ## Development instructions
 
