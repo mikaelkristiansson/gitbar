@@ -1,16 +1,11 @@
 import { writable } from 'svelte/store';
-import {
-  Appearance,
-  type AuthTokenOptions,
-  type SettingsState,
-} from '../types';
+import type { AuthTokenOptions, SettingsState } from '../types';
 import { getUserData } from './api';
 import { disable, enable } from './auto-start';
 import { clearState, loadState, saveState } from './storage';
 
 export const defaultSettings: SettingsState = {
   openAtStartup: false,
-  appearance: Appearance.SYSTEM,
   fetchInterval: 30000,
 };
 

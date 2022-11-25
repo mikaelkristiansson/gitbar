@@ -27,7 +27,7 @@
     on:keydown
     bind:this={modalBg}
   >
-    <div class="bg-white rounded-lg shadow dark:bg-gray-800 w-10/12">
+    <div class="bg-white rounded-lg shadow dark:bg-gray-900 w-10/12">
       <slot {close} />
     </div>
   </div>

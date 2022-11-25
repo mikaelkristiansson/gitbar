@@ -13,14 +13,12 @@ export interface AuthState {
 
 export interface SettingsState {
   openAtStartup: boolean;
-  appearance?: Appearance;
   fetchInterval: number;
 }
 
 export enum Appearance {
-  SYSTEM = 'SYSTEM',
-  LIGHT = 'LIGHT',
-  DARK = 'DARK',
+  light = 'light',
+  dark = 'dark',
 }
 
 export interface AuthTokenOptions {

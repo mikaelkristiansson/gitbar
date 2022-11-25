@@ -1,5 +1,5 @@
 <script lang="ts">
-  const defaultHost = 'github.com';
+  import { open } from '@tauri-apps/api/shell';
   import {
     Validators,
     type ValidatorFn,
@@ -7,7 +7,9 @@
   } from '../lib/validators';
   import { auth } from '../lib/auth';
 
+  const defaultHost = 'github.com';
   let errors: { [inputName: string]: ValidatorResult } = {};
+  let loading = false;
 
   let form: {
     [inputName: string]: {
@@ -56,7 +58,8 @@
     validateForm(data);
 
     if (isFormValid()) {
-      $auth.signIn(data);
+      loading = true;
+      $auth.signIn(data).finally(() => (loading = false));
     } else {
       console.log('Invalid Form');
     }
@@ -77,22 +80,30 @@
           type="text"
           name="token"
           id="token"
-          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          class="
+          block
+          w-full
+          rounded-md
+          text-gray-900
+          border-gray-300
+          shadow-sm
+          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+        "
           on:blur={onBlur}
           placeholder="The 40 characters token generated on GitHub"
         />
-        {#if errors?.token?.required?.error}
-          <p class="text-red-500 dark:text-red-300">Token is required</p>
-        {/if}
       </div>
+      {#if errors?.token?.required?.error}
+        <p class="text-red-400 dark:text-red-300">Token is required</p>
+      {/if}
       <span class="text-sm">
         To generate a token, go to GitHub,
-        <a
+        <button
           class="underline hover:text-gray-500 dark:hover:text-gray-300 cursor-pointer"
-          href="https://github.com/settings/tokens"
+          on:click={() => open('https://github.com/settings/tokens')}
         >
           personal access tokens
-        </a>
+        </button>
       </span>
     </div>
     <div class="pb-2">
@@ -110,23 +121,56 @@
           id="hostname"
           value={defaultHost}
           on:blur={onBlur}
-          class="block w-full rounded-md text-gray-900 border-gray-300 px-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          class="
+          block
+          w-full
+          rounded-md
+          border-gray-300
+          text-gray-900
+          shadow-sm
+          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+          "
         />
-        {#if errors?.hostname?.required?.error}
-          <p class="text-red-500 dark:text-red-300">Password is required</p>
-        {/if}
       </div>
+      {#if errors?.hostname?.required?.error}
+        <p class="text-red-400 dark:text-red-300">Password is required</p>
+      {/if}
       <span class="text-sm">
         Defaults to {defaultHost}. Change only if you are using GitHub for
         Enterprise.
       </span>
     </div>
     <button
-      class="w-full px-4 py-2 my-4 bg-gray-300 font-semibold rounded text-sm text-center hover:bg-gray-500 hover:text-white dark:text-black focus:outline-none"
+      class={`${
+        loading ? 'opacity-50' : ''
+      } flex justify-center items-center w-full text-white font-bold bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md text-sm px-4 py-2 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800`}
       type="submit"
       title="Submit Button"
+      disabled={loading}
     >
       Submit
+      {#if loading}
+        <svg
+          class="animate-spin h-4 w-4 text-white ml-3"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          />
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      {/if}
     </button>
   </form>
 </div>

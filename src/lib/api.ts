@@ -30,20 +30,6 @@ export const getUserData = async (
   };
 };
 
-export const addAccount = (
-  account: AuthState,
-  token: string,
-  hostname: string,
-  user?: User
-): AuthState => {
-  return {
-    ...account,
-    token,
-    hostname,
-    user: user ?? null,
-  };
-};
-
 export const getReviews = async (account: AuthState): Promise<Review> => {
   const search = `type:pr state:open review-requested:${account.user?.login}`;
   const text = `
