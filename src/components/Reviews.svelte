@@ -4,6 +4,9 @@
   import { dateToString } from '../lib/formatters';
   import { github } from '../lib/github';
   import { auth, defaultSettings } from '../lib/auth';
+
+  let loading = true;
+
   function onClick(url: string) {
     open(url);
   }
@@ -12,13 +15,56 @@
   }, $auth.settings.fetchInterval || defaultSettings.fetchInterval);
 
   onMount(() => {
-    $github.fetchReviews($auth.account);
+    $github.fetchReviews($auth.account).finally(() => (loading = false));
   });
 
   onDestroy(() => clearInterval(interval));
 </script>
 
-{#if $github.reviews.count === 0}
+{#if loading}
+  <div class="m-2 p-2 max-w w-full mx-auto">
+    <div class="animate-pulse flex space-x-4">
+      <div class="rounded-full bg-slate-200 h-6 w-6" />
+      <div class="flex-1 space-y-6 py-1">
+        <div class="h-2 bg-slate-200 rounded" />
+        <div class="space-y-3">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="h-2 bg-slate-200 rounded col-span-2" />
+            <div class="h-2 bg-slate-200 rounded col-span-1" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="m-2 p-2 max-w w-full mx-auto">
+    <div class="animate-pulse flex space-x-4">
+      <div class="rounded-full bg-slate-200 h-6 w-6" />
+      <div class="flex-1 space-y-6 py-1">
+        <div class="h-2 bg-slate-200 rounded" />
+        <div class="space-y-3">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="h-2 bg-slate-200 rounded col-span-2" />
+            <div class="h-2 bg-slate-200 rounded col-span-1" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="m-2 p-2 max-w w-full mx-auto">
+    <div class="animate-pulse flex space-x-4">
+      <div class="rounded-full bg-slate-200 h-6 w-6" />
+      <div class="flex-1 space-y-6 py-1">
+        <div class="h-2 bg-slate-200 rounded" />
+        <div class="space-y-3">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="h-2 bg-slate-200 rounded col-span-2" />
+            <div class="h-2 bg-slate-200 rounded col-span-1" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{:else if $github.reviews.count === 0}
   <div class="mx-4 my-8">
     <div
       class="p-4 w-full bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-slate-900"

@@ -115,3 +115,19 @@
 <Modal bind:modalVisible on:keydown={keydown}>
   <Settings bind:modalVisible />
 </Modal>
+
+<style>
+  @keyframes slide-up {
+    0% {
+      transform: translateY(110vh);
+    }
+    100% {
+      transform: translateY(0vh);
+    }
+  }
+
+  footer {
+    transform: translateY(110vh);
+    animation: slide-up 1s forwards;
+  }
+</style>

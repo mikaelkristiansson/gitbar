@@ -9,6 +9,7 @@
 * add space at bottom to show complete review list
 * change styling to look like github
 * on logout, delete all store data
+* add animation for loading state
 
 ## 0.2.0
 ### Features
