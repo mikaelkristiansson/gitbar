@@ -38,7 +38,6 @@
 >
   <div class="gradient gradient-1 show-gradient absolute inset-0 -z-10 blur-[160px]" />
   <div class="relative">
-    <img src={`${base}/tray.png`} class=" m-auto lg:-mb-12 -mb-4" alt="gitbar tray" />
     <img src={`${base}/screenshot.png`} alt="gitbar screenshot" />
   </div>
 </Revealed>
