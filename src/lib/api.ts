@@ -47,11 +47,7 @@ export const getReviews = async (account: AuthState): Promise<Review> => {
             number
             url
             title
-            labels(first:100) {
-              nodes {
-                name
-              }
-            }
+            changedFiles
           }
         }
       }
