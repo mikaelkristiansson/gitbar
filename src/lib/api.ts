@@ -7,12 +7,7 @@ export const getUserData = async (
 ): Promise<User> => {
   const client = await getClient();
   const response: {
-    data: {
-      id: number;
-      login: string;
-      name: string;
-      avatar_url: string;
-    };
+    data: User;
   } = await client.get(`https://api.${hostname}/user`, {
     responseType: ResponseType.JSON,
     headers: {
@@ -27,6 +22,9 @@ export const getUserData = async (
     login: data.login,
     name: data.name,
     avatar_url: data.avatar_url,
+    html_url: data.html_url,
+    company: data.company,
+    email: data.email,
   };
 };
 

@@ -7,7 +7,6 @@ use tauri::Manager;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, PhysicalPosition};
 
 mod auto_start;
-use auto_start::MacosLauncher;
 
 #[cfg(target_os = "macos")]
 use cocoa::appkit::{NSWindow, NSWindowButton, NSWindowStyleMask, NSWindowTitleVisibility};
@@ -143,7 +142,6 @@ fn main() {
     })
     .invoke_handler(tauri::generate_handler![set_review_count])
     .plugin(auto_start::init(
-      MacosLauncher::LaunchAgent,
       None,
     ))
     .setup(|app| {

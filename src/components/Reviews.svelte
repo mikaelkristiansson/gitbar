@@ -22,48 +22,62 @@
 </script>
 
 {#if loading}
-  <div class="m-2 p-2 max-w w-full mx-auto">
-    <div class="animate-pulse flex space-x-4">
-      <div class="rounded-full bg-slate-200 h-6 w-6" />
-      <div class="flex-1 space-y-6 py-1">
-        <div class="h-2 bg-slate-200 rounded" />
-        <div class="space-y-3">
-          <div class="grid grid-cols-3 gap-4">
-            <div class="h-2 bg-slate-200 rounded col-span-2" />
-            <div class="h-2 bg-slate-200 rounded col-span-1" />
+  <ul class="divide-y divide-gray-200 dark:divide-slate-900">
+    <li class="m-2 p-2 max-w w-full mx-auto">
+      <div class="animate-pulse flex space-x-4">
+        <div class="rounded-full bg-slate-200 dark:bg-slate-500 h-6 w-6" />
+        <div class="flex-1 space-y-4 py-1">
+          <div class="h-2 bg-slate-200 dark:bg-slate-500 rounded" />
+          <div class="space-y-3">
+            <div class="grid grid-cols-3 gap-4">
+              <div
+                class="h-2 bg-slate-200 dark:bg-slate-500 rounded col-span-2"
+              />
+              <div
+                class="h-2 bg-slate-200 dark:bg-slate-500 rounded col-span-1"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="m-2 p-2 max-w w-full mx-auto">
-    <div class="animate-pulse flex space-x-4">
-      <div class="rounded-full bg-slate-200 h-6 w-6" />
-      <div class="flex-1 space-y-6 py-1">
-        <div class="h-2 bg-slate-200 rounded" />
-        <div class="space-y-3">
-          <div class="grid grid-cols-3 gap-4">
-            <div class="h-2 bg-slate-200 rounded col-span-2" />
-            <div class="h-2 bg-slate-200 rounded col-span-1" />
+    </li>
+    <li class="m-2 p-2 max-w w-full mx-auto">
+      <div class="animate-pulse flex space-x-4">
+        <div class="rounded-full bg-slate-200 dark:bg-slate-500 h-6 w-6" />
+        <div class="flex-1 space-y-4 py-1">
+          <div class="h-2 bg-slate-200 dark:bg-slate-500 rounded" />
+          <div class="space-y-3">
+            <div class="grid grid-cols-3 gap-4">
+              <div
+                class="h-2 bg-slate-200 dark:bg-slate-500 rounded col-span-2"
+              />
+              <div
+                class="h-2 bg-slate-200 dark:bg-slate-500 rounded col-span-1"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="m-2 p-2 max-w w-full mx-auto">
-    <div class="animate-pulse flex space-x-4">
-      <div class="rounded-full bg-slate-200 h-6 w-6" />
-      <div class="flex-1 space-y-6 py-1">
-        <div class="h-2 bg-slate-200 rounded" />
-        <div class="space-y-3">
-          <div class="grid grid-cols-3 gap-4">
-            <div class="h-2 bg-slate-200 rounded col-span-2" />
-            <div class="h-2 bg-slate-200 rounded col-span-1" />
+    </li>
+    <li class="m-2 p-2 max-w w-full mx-auto">
+      <div class="animate-pulse flex space-x-4">
+        <div class="rounded-full bg-slate-200 dark:bg-slate-500 h-6 w-6" />
+        <div class="flex-1 space-y-4 py-1">
+          <div class="h-2 bg-slate-200 dark:bg-slate-500 rounded" />
+          <div class="space-y-3">
+            <div class="grid grid-cols-3 gap-4">
+              <div
+                class="h-2 bg-slate-200 dark:bg-slate-500 rounded col-span-2"
+              />
+              <div
+                class="h-2 bg-slate-200 dark:bg-slate-500 rounded col-span-1"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </li>
+  </ul>
 {:else if $github.reviews.count === 0}
   <div class="mx-4 my-8">
     <div
@@ -94,7 +108,7 @@
       {#each $github.reviews.data as review}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <li
-          class="p-2 hover:cursor-pointer hover:bg-gray-100 hover:dark:bg-gray-900"
+          class="group p-2 hover:cursor-pointer hover:bg-gray-100 hover:dark:bg-gray-900"
           on:click={() => onClick(review.node.url)}
         >
           <div class="flex">
@@ -114,14 +128,14 @@
                 >
               </span>
             </div>
-            <div class="whitespace-nowrap text-ellipsis overflow-hidden">
-              <span
-                class="dark:text-white text-gray-900 hover:text-blue-700 dark:hover:text-blue-600 font-bold"
+            <div class="whitespace-nowrap text-ellipsis overflow-hidden w-full">
+              <span class="text-slate-500 dark:text-gray-300"
+                >{review.node.repository.nameWithOwner}</span
               >
-                <span class="text-slate-500 dark:text-gray-300"
-                  >{review.node.repository.nameWithOwner}</span
-                >
-                <span class="">{review.node.title}</span>
+              <span
+                class="dark:text-white text-gray-900 group-hover:text-blue-700 dark:group-hover:text-blue-500 transition-colors font-bold"
+              >
+                {review.node.title}
               </span>
               <br />
               <span class="text-sm text-gray-500 truncate dark:text-gray-400">

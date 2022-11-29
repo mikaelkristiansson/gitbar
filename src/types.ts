@@ -3,6 +3,9 @@ export interface User {
   name: string;
   id: number;
   avatar_url: string;
+  html_url?: string;
+  company?: string;
+  email?: string;
 }
 
 export interface AuthState {
