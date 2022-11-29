@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { open } from '@tauri-apps/api/shell';
-  import { dateToString } from '../lib/formatters';
+  import { timeAgo } from '../lib/formatters';
   import { github } from '../lib/github';
   import { auth, defaultSettings } from '../lib/auth';
 
@@ -125,9 +125,8 @@
               </span>
               <br />
               <span class="text-sm text-gray-500 truncate dark:text-gray-400">
-                #{review.node.number} opened on{' '}
-                {dateToString(review.node.createdAt, 'YYYY-MM-DD h:m')} by @{review
-                  .node.author.login}
+                #{review.node.number} opened
+                {timeAgo(review.node.createdAt)} by @{review.node.author.login}
               </span>
             </div>
           </div>
