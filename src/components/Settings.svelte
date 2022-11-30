@@ -5,6 +5,7 @@
   import Toggle from './Toggle.svelte';
   import Range from './Range.svelte';
   import Theme from './Theme.svelte';
+  import { isEnabled } from '../lib/auto-start';
 
   export let modalVisible: boolean;
   let openAtStartup = $auth.settings?.openAtStartup;
@@ -27,6 +28,9 @@
     Promise.all([getName(), getVersion()]).then((values) => {
       const [name, version] = values;
       app = { name, version };
+    });
+    isEnabled().then((active) => {
+      openAtStartup = active;
     });
   });
 </script>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { open } from '@tauri-apps/api/shell';
   import { auth } from '../lib/auth';
   import { github } from '../lib/github';
   import Image from './Image.svelte';
@@ -48,12 +49,24 @@
           />
         </svg>
       </Image>
-      <span class="ml-1 block truncate">{$auth.account?.user?.name}</span>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <span
+        class={`${
+          $auth.account?.user?.html_url
+            ? 'cursor-pointer hover:text-slate-600/70 dark:hover:text-white/70'
+            : ''
+        } ml-1 block truncate`}
+        on:click={() =>
+          $auth.account?.user?.html_url
+            ? open($auth.account?.user?.html_url)
+            : null}>{$auth.account?.user?.name}</span
+      >
     </div>
     <div class="flex justify-between">
       <button
         class="p-2 dark:text-white dark:hover:text-white/70 text-slate-600 hover:text-slate-600/70"
         on:click={startFetch}
+        title="Fetch"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -73,6 +86,7 @@
       <button
         class="p-2 dark:text-white dark:hover:text-white/70 text-slate-600 hover:text-slate-600/70"
         on:click={() => (modalVisible = true)}
+        title="Settings"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +106,7 @@
       <button
         class="p-2 dark:text-white dark:hover:text-white/70 text-slate-600 hover:text-slate-600/70"
         on:click={$auth.signOut}
+        title="Sign Out"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

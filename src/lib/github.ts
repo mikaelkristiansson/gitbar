@@ -21,7 +21,7 @@ async function notification(text: string) {
   }
   if (permissionGranted) {
     sendNotification({
-      title: 'Gitbar',
+      title: 'GitBar',
       body: text,
     });
   }
@@ -41,8 +41,11 @@ const fetchReviews = async (account: AuthState) => {
     }));
     invoke('set_review_count', { count: String(res.issueCount) });
   }
+
   if (res.issueCount > prevCount) {
-    notification('A new PR is awaiting your review!');
+    const title = res.edges[0].node.title;
+    const author = res.edges[0].node.author.login;
+    notification(`${title} - @${author}`);
   }
 };
 

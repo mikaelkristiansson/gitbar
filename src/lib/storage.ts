@@ -1,6 +1,7 @@
 import type { AuthState, SettingsState } from '../types';
 import { invoke } from '@tauri-apps/api';
 import { github } from './github';
+import { disable } from './auto-start';
 
 export const loadState = (): {
   account?: AuthState;
@@ -29,4 +30,5 @@ export const clearState = (): void => {
     },
   }));
   localStorage.clear();
+  disable();
 };

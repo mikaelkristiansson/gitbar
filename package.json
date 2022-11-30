@@ -1,7 +1,7 @@
 {
   "name": "gitbar",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.2.0",
-    "@tauri-apps/cli": "^1.2.0",
+    "@tauri-apps/cli": "^1.2.1",
     "@tsconfig/svelte": "^3.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.18",

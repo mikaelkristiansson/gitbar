@@ -9,10 +9,6 @@
   }
   $: if (modalVisible && modalBg) {
     modalBg.focus();
-    const firstInput = modalBg.querySelector('input, textarea');
-    if (firstInput instanceof HTMLElement) {
-      firstInput.focus();
-    }
   }
   function close() {
     modalVisible = false;
