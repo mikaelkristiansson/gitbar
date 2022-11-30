@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+### Features
+* change time stamp format to text
+* add latest review text on notification
+
+### Fix
+* on logout, disable auto start setting (this is bound to login)
+* add link to user on domain
+* update `text-ellipsis` for review list
+
 ## 0.3.0
 
 ### Features

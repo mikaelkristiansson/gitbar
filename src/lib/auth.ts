@@ -34,13 +34,11 @@ const signOut = () => {
 };
 
 const updateSettings = (data: SettingsState) => {
-  if (data['openAtStartup']) {
-    switch (data['openAtStartup'] as boolean) {
-      case true:
-        enable();
-      case false:
-        disable();
-    }
+  switch (data['openAtStartup'] as boolean) {
+    case true:
+      enable();
+    case false:
+      disable();
   }
   auth.update((prevAuth) => {
     const newSettings = {
