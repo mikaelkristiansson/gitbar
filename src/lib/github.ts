@@ -31,6 +31,12 @@ const fetchReviews = async (account: AuthState) => {
   const res = await getReviews(account);
   let prevCount: number;
   github.subscribe(({ reviews }) => (prevCount = reviews.count));
+
+  if (res.issueCount > prevCount) {
+    const title = res.edges[0].node.title;
+    const author = res.edges[0].node.author.login;
+    notification(`${title} - @${author}`);
+  }
   if (res.issueCount !== prevCount) {
     github.update((prev) => ({
       ...prev,
@@ -40,12 +46,6 @@ const fetchReviews = async (account: AuthState) => {
       },
     }));
     invoke('set_review_count', { count: String(res.issueCount) });
-  }
-
-  if (res.issueCount > prevCount) {
-    const title = res.edges[0].node.title;
-    const author = res.edges[0].node.author.login;
-    notification(`${title} - @${author}`);
   }
 };
 

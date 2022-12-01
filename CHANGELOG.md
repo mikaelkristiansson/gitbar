@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
+### Fix
+* change order when calling notification (before store update)
+
 ## 0.4.0
 
 ### Features
