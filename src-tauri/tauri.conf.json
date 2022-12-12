@@ -8,13 +8,15 @@
   },
   "package": {
     "productName": "GitBar",
-    "version": "0.4.1"
+    "version": "0.4.2"
   },
   "tauri": {
     "allowlist": {
       "http": {
         "request": true,
-        "scope": ["https://**"]
+        "scope": [
+          "https://**"
+        ]
       },
       "notification": {
         "all": true

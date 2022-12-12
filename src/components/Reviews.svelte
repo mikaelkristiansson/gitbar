@@ -6,12 +6,14 @@
   import { auth, defaultSettings } from '../lib/auth';
 
   let loading = true;
+  let dateUpdater = 0;
 
   function onClick(url: string) {
     open(url);
   }
   const interval = setInterval(() => {
     $github.fetchReviews($auth.account);
+    dateUpdater++;
   }, $auth.settings.fetchInterval || defaultSettings.fetchInterval);
 
   onMount(() => {
@@ -138,10 +140,13 @@
                 {review.node.title}
               </span>
               <br />
-              <span class="text-sm text-gray-500 truncate dark:text-gray-400">
-                #{review.node.number} opened
-                {timeAgo(review.node.createdAt)} by @{review.node.author.login}
-              </span>
+              {#key dateUpdater}
+                <span class="text-sm text-gray-500 truncate dark:text-gray-400">
+                  #{review.node.number} opened
+                  {timeAgo(review.node.createdAt)} by @{review.node.author
+                    .login}
+                </span>
+              {/key}
             </div>
           </div>
         </li>
