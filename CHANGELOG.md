@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.2
+
+# Fix
+* update timestamp every time new fetch is called
+
 ## 0.4.1
 
 ### Fix
