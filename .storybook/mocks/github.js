@@ -21,10 +21,8 @@ const mockData = {
     })),
 };
 
-const reviews = mockData;
-
 export const github = writable({
-    reviews,
+    reviews: mockData,
     fetchReviews: async () =>
         github.update(prev => ({
             ...prev,
