@@ -1,3 +1,6 @@
+const { resolve } = require('path');
+const { mergeConfig } = require('vite');
+
 module.exports = {
     stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx|svelte)'],
     addons: [
@@ -21,5 +24,18 @@ module.exports = {
     },
     docs: {
         docsPage: true,
+    },
+    viteFinal: async config => {
+        return mergeConfig(config, {
+            // Add storybook-specific dependencies to pre-optimization
+            resolve: {
+                alias: [
+                    {
+                        find: /src\/(lib)\/(github.ts)/,
+                        replacement: resolve(__dirname, './mocks/github.js'),
+                    },
+                ],
+            },
+        });
     },
 };
