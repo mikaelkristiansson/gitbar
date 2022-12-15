@@ -27,7 +27,7 @@ module.exports = {
     },
     viteFinal: async config => {
         return mergeConfig(config, {
-            // Add storybook-specific dependencies to pre-optimization
+            // Add storybook-specific config here
             resolve: {
                 alias: [
                     {
