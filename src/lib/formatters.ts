@@ -1,3 +1,5 @@
+import type { GithubReview, GithubUser, AzureReview, Review, User, ExtendedAzureUser } from "../types";
+
 const MONTH_NAMES = [
   'January',
   'February',
@@ -44,7 +46,7 @@ function getFormattedDate(
   return `${day}. ${month} ${year}. at ${hours}:${minutes}`;
 }
 
-export function timeAgo(dateParam: Date) {
+export function timeAgo(dateParam: string) {
   if (!dateParam) {
     return null;
   }
@@ -76,4 +78,50 @@ export function timeAgo(dateParam: Date) {
   }
 
   return getFormattedDate(date); // 10. January 2017. at 10:20
+}
+
+export function mapGithubUser(data: GithubUser): User {
+  return {
+    name: data.login,
+    id: data.id,
+    url: data.html_url,
+    avatar: data.avatar_url,
+    organisation: data.company
+  }
+}
+
+export function mapAzureUser(data: ExtendedAzureUser): User {
+  return {
+    name: data.displayName,
+    id: data.id,
+    organisation: data.organisation,
+    project: data.project
+  }
+}
+
+export function mapGithubReview(data: GithubReview): Review {
+  return {
+    count: data.issueCount,
+    issues: data.edges.map(e => ({
+      repository: e.node.repository.nameWithOwner,
+      author: e.node.author.login,
+      createdAt: e.node.createdAt,
+      number: e.node.number,
+      url: e.node.url,
+      title: e.node.title
+    }))
+  }
+}
+export function mapAzureReview(data: AzureReview): Review {
+  return {
+    count: data.count,
+    issues: data.value.map(e => ({
+      repository: `${e.repository.project}-${e.repository.name}`,
+      author: e.createdBy.displayName,
+      createdAt: e.creationDate,
+      number: e.pullRequestId,
+      url: e.url,
+      title: e.title
+    }))
+  }
 }

@@ -1,6 +1,6 @@
 import type { AuthState, SettingsState } from '../types';
 import { invoke } from '@tauri-apps/api';
-import { github } from './github';
+import { reviews } from './reviews';
 import { disable } from './auto-start';
 
 export const loadState = (): {
@@ -22,11 +22,11 @@ export const saveState = (
 
 export const clearState = (): void => {
   invoke('set_review_count', { count: '' });
-  github.update((prev) => ({
+  reviews.update((prev) => ({
     ...prev,
     reviews: {
       count: 0,
-      data: [],
+      issues: [],
     },
   }));
   localStorage.clear();

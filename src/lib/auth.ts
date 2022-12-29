@@ -1,21 +1,27 @@
 import { writable } from 'svelte/store';
 import type { AuthTokenOptions, SettingsState } from '../types';
-import { getUserData } from './api';
+import { getGithubUserData } from '../api/github';
 import { disable, enable } from './auto-start';
 import { clearState, loadState, saveState } from './storage';
+import { getAzureUserData } from '../api/azure';
 
 export const defaultSettings: SettingsState = {
   openAtStartup: false,
   fetchInterval: 30000,
 };
 
-const signIn = async ({ token, hostname }: AuthTokenOptions) => {
-  const user = await getUserData(token, hostname);
+const signIn = async ({ token, hostname, type, organisation, project }: AuthTokenOptions) => {
+  const user = await (type === 'github' ? getGithubUserData(token, hostname) : getAzureUserData(token));
   if (user) {
+    if (organisation && project) {
+      user['organisation'] = organisation;
+      user['project'] = project;
+    }
     const account = {
       token,
       hostname,
       user,
+      type
     };
     auth.update((prevAuth) => ({
       ...prevAuth,

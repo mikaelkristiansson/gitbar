@@ -1,13 +1,14 @@
-import type { AuthState, Review, User } from '../types';
+import type { AuthState, GithubReview, GithubUser, Review, User } from '../types';
 import { getClient, ResponseType, Body } from '@tauri-apps/api/http';
+import { mapGithubReview, mapGithubUser } from '../lib/formatters';
 
-export const getUserData = async (
+export const getGithubUserData = async (
   token: string,
   hostname: string
 ): Promise<User> => {
   const client = await getClient();
   const response: {
-    data: User;
+    data: GithubUser;
   } = await client.get(`https://api.${hostname}/user`, {
     responseType: ResponseType.JSON,
     headers: {
@@ -17,19 +18,11 @@ export const getUserData = async (
 
   const { data } = response;
 
-  return {
-    id: data.id,
-    login: data.login,
-    name: data.name,
-    avatar_url: data.avatar_url,
-    html_url: data.html_url,
-    company: data.company,
-    email: data.email,
-  };
+  return mapGithubUser(data);
 };
 
-export const getReviews = async (account: AuthState): Promise<Review> => {
-  const search = `type:pr state:open review-requested:${account.user?.login}`;
+export const getGithubReviews = async (account: AuthState): Promise<Review> => {
+  const search = `type:pr state:open review-requested:${account.user?.name}`;
   const text = `
   {
     search(query: "${search}", type: ISSUE, first: 100) {
@@ -61,7 +54,7 @@ export const getReviews = async (account: AuthState): Promise<Review> => {
   const response: {
     data: {
       data: {
-        search: Review;
+        search: GithubReview;
       };
     };
   } = await client.post(
@@ -74,5 +67,5 @@ export const getReviews = async (account: AuthState): Promise<Review> => {
     }
   );
   const { data } = response;
-  return data.data.search;
+  return mapGithubReview(data.data.search);
 };

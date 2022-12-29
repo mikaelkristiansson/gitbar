@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
-import type { AuthState } from '../types';
-import { getReviews } from './api';
+import type { AuthState, Review } from '../types';
+import { getGithubReviews } from '../api/github';
+import { getAzureReviews } from '../api/azure';
 import { invoke } from '@tauri-apps/api';
 import {
   isPermissionGranted,
@@ -8,9 +9,9 @@ import {
   sendNotification,
 } from '@tauri-apps/api/notification';
 
-const reviews = {
+const data: Review = {
   count: 0,
-  data: [],
+  issues: [],
 };
 
 async function notification(text: string) {
@@ -28,28 +29,29 @@ async function notification(text: string) {
 }
 
 const fetchReviews = async (account: AuthState) => {
-  const res = await getReviews(account);
+  const res = await (account.type === 'github' ? getGithubReviews(account) : getAzureReviews(account));
   let prevCount: number;
-  github.subscribe(({ reviews }) => (prevCount = reviews.count));
+  reviews.subscribe(({ data }) => (prevCount = data.count));
 
-  if (res.issueCount > prevCount) {
-    const title = res.edges[0].node.title;
-    const author = res.edges[0].node.author.login;
+  if (res.count > prevCount) {
+    const title = res.issues[0].title;
+    const author = res.issues[0].author;
     notification(`${title} - @${author}`);
   }
-  if (res.issueCount !== prevCount) {
-    github.update((prev) => ({
+
+  if (res.count !== prevCount) {
+    reviews.update((prev) => ({
       ...prev,
-      reviews: {
-        count: res.issueCount,
-        data: res.edges,
+      data: {
+        count: res.count,
+        issues: res.issues,
       },
     }));
-    invoke('set_review_count', { count: String(res.issueCount) });
+    invoke('set_review_count', { count: String(res.count) });
   }
 };
 
-export const github = writable({
-  reviews,
+export const reviews = writable({
+  data,
   fetchReviews,
 });
