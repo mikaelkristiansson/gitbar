@@ -11,6 +11,6 @@ export default meta;
 type Story = StoryObj<Reviews>;
 
 // More on writing stories with args: https://storybook.js.org/docs/7.0/svelte/writing-stories/args
-export const Default: Story = {
+export const NoReviews: Story = {
     args: {},
 };
