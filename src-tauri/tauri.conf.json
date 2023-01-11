@@ -62,10 +62,11 @@
       "csp": null
     },
     "updater": {
-      "active": false,
+      "active": true,
       "endpoints": [
         "https://mikaelkristiansson.github.io/gitbar/latest.json"
-      ]
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5QTQ5RjAwRTkzRkEwRjAKUldUd29EL3BBSitrK1RoUFFVRTdJVE0rY0N5RGMwVWR5U3FiYUdxR242UktNT0x1OGdhRVgwMUkK"
     },
     "systemTray": {
       "iconPath": "icons/tray.png",
