@@ -34,6 +34,10 @@ module.exports = {
                         find: /src\/(lib)\/(github.ts)/,
                         replacement: resolve(__dirname, './mocks/github.js'),
                     },
+                    {
+                        find: /src\/(lib)\/(auth.ts)/,
+                        replacement: resolve(__dirname, './mocks/auth.js'),
+                    },
                 ],
             },
         });
