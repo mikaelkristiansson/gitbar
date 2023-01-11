@@ -62,7 +62,10 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": false,
+      "endpoints": [
+        "https://mikaelkristiansson.github.io/gitbar/latest.json"
+      ]
     },
     "systemTray": {
       "iconPath": "icons/tray.png",

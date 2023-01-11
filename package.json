@@ -1,8 +1,13 @@
 {
   "name": "gitbar",
+  "displayName": "GitBar",
   "private": true,
-  "version": "0.4.2",
+  "version": "0.4.3",
   "type": "module",
+  "repository": {
+    "url": "https://github.com/mikaelkristiansson/gitbar",
+    "type": "git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -35,5 +40,9 @@
     "singleQuote": true,
     "printWidth": 120,
     "arrowParens": "avoid"
-  }
+  },
+  "contributors": [
+    "mikaelkristiansson",
+    "friskopp"
+  ]
 }
