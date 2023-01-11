@@ -30,4 +30,5 @@ jobs:
                   TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
             - uses: tauri-apps/tauri-action@v0
               env:
+                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

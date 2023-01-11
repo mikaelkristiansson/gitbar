@@ -33,6 +33,7 @@ jobs:
               run: yarn && yarn tauri:build
             - uses: tauri-apps/tauri-action@v0
               env:
+                  TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   tagName: gitbar-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
