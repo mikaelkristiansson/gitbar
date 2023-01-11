@@ -2,7 +2,7 @@
   "name": "gitbar",
   "displayName": "GitBar",
   "private": true,
-  "version": "0.4.3",
+  "version": "0.4.2",
   "type": "module",
   "repository": {
     "url": "https://github.com/mikaelkristiansson/gitbar",
