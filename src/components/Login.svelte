@@ -1,176 +1,146 @@
 <script lang="ts">
-  import { open } from '@tauri-apps/api/shell';
-  import {
-    Validators,
-    type ValidatorFn,
-    type ValidatorResult,
-  } from '../lib/validators';
-  import { auth } from '../lib/auth';
+    import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+    import {
+        Select,
+        SelectTrigger,
+        SelectContent,
+        SelectGroup,
+        SelectValue,
+        SelectItem,
+    } from '$lib/components/ui/select';
+    import { Label } from '$lib/components/ui/label';
+    import { Input } from '$lib/components/ui/input';
+    import { Button } from '$lib/components/ui/button';
+    import { open } from '@tauri-apps/api/shell';
+    import { Validators, type ValidatorFn, type ValidatorResult } from '../lib/validators';
+    import { auth } from '../lib/auth';
 
-  const defaultHost = 'github.com';
-  let errors: { [inputName: string]: ValidatorResult } = {};
-  let loading = false;
+    let defaultHost = '';
+    let accessTokenURL = '';
 
-  let form: {
-    [inputName: string]: {
-      validators: ValidatorFn[];
+    const gitProviders = [
+        { value: 'github', label: 'GitHub' },
+        { value: 'gitlab', label: 'GitLab' },
+        { value: 'bitbucket', label: 'Bitbucket' },
+    ];
+
+    function onSelectedChange(e) {
+        if (e.value === 'github') {
+            defaultHost = 'github.com';
+            accessTokenURL = 'https://github.com/settings/tokens';
+        } else if (e.value === 'gitlab') {
+            defaultHost = 'gitlab.com';
+            accessTokenURL = 'https://gitlab.com/-/user_settings/personal_access_tokens';
+        } else if (e.value === 'bitbucket') {
+            defaultHost = 'bitbucket.org';
+        }
+        return e;
+    }
+
+    let errors: { [inputName: string]: ValidatorResult } = {};
+    let loading = false;
+
+    let form: {
+        [inputName: string]: {
+            validators: ValidatorFn[];
+        };
+    } = {
+        token: {
+            validators: [Validators.required],
+        },
+        hostname: {
+            validators: [Validators.required],
+        },
     };
-  } = {
-    token: {
-      validators: [Validators.required],
-    },
-    hostname: {
-      validators: [Validators.required],
-    },
-  };
 
-  function isFormValid(): boolean {
-    return !Object.values(errors).some((field) =>
-      Object.values(field).some((errorObject) => errorObject.error)
-    );
-  }
-
-  function validateForm(data: { [inputName: string]: any }): void {
-    Object.keys(data).forEach((field) => validateField(field, data[field]));
-  }
-
-  function validateField(field, value) {
-    form[field]?.validators &&
-      form[field].validators.forEach((fn) => {
-        const error = fn(value);
-        errors[field] = { ...errors[field], ...error };
-      });
-  }
-
-  function onBlur(e) {
-    validateField(e.target.name, e.target.value);
-  }
-
-  function onSubmit(e) {
-    const formData = new FormData(e.target);
-
-    const data: any = {};
-    for (let field of formData) {
-      const [key, value] = field;
-      data[key] = value;
+    function isFormValid(): boolean {
+        return !Object.values(errors).some(field => Object.values(field).some(errorObject => errorObject.error));
     }
 
-    validateForm(data);
-
-    if (isFormValid()) {
-      loading = true;
-      $auth.signIn(data).finally(() => (loading = false));
-    } else {
-      console.log('Invalid Form');
+    function validateForm(data: { [inputName: string]: any }): void {
+        Object.keys(data).forEach(field => validateField(field, data[field]));
     }
-  }
+
+    function validateField(field, value) {
+        form[field]?.validators &&
+            form[field].validators.forEach(fn => {
+                const error = fn(value);
+                errors[field] = { ...errors[field], ...error };
+            });
+    }
+
+    function onBlur(e) {
+        validateField(e.target.name, e.target.value);
+    }
+
+    function onSubmit(e) {
+        const formData = new FormData(e.target);
+
+        const data: any = {};
+        for (let field of formData) {
+            const [key, value] = field;
+            data[key] = value;
+        }
+
+        validateForm(data);
+
+        if (isFormValid()) {
+            loading = true;
+            $auth.signIn(data).finally(() => (loading = false));
+        } else {
+            console.log('Invalid Form');
+        }
+    }
 </script>
 
 <div class="m-8">
-  <form on:submit|preventDefault={onSubmit}>
-    <div class="pb-2">
-      <label
-        for="token"
-        class="block text-sm font-bold text-gray-700 dark:text-gray-100"
-      >
-        Token
-      </label>
-      <div class="relative mt-1 rounded-md shadow-sm">
-        <input
-          type="text"
-          name="token"
-          id="token"
-          class="
-          block
-          w-full
-          rounded-md
-          text-gray-900
-          border-gray-300
-          shadow-sm
-          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
-        "
-          on:blur={onBlur}
-          placeholder="The 40 characters token generated on GitHub"
+    <form on:submit|preventDefault={onSubmit}>
+        <Label for="gitProvider">Git provider</Label>
+        <Select portal={null} {onSelectedChange}>
+            <SelectTrigger>
+                <SelectValue id="gitProvider" placeholder="Select a provider" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectGroup>
+                    {#each gitProviders as provider}
+                        <SelectItem value={provider.value}>{provider.label}</SelectItem>
+                    {/each}
+                </SelectGroup>
+            </SelectContent>
+        </Select>
+
+        <Label for="token">Token</Label>
+        <Input type="text" name="token" id="token" placeholder="Git token" on:blur={onBlur} />
+        {#if errors?.token?.required?.error}
+            <p class="text-sm text-red-400 dark:text-red-300">Token is required</p>
+        {/if}
+        <span class="text-sm">
+            To generate a token, go to GitHub,
+            <Button class="p-0 underline" variant="link" on:click={() => open(accessTokenURL)}>
+                personal access tokens
+            </Button>
+        </span>
+        <Label for="hostname">Hostname</Label>
+        <Input
+            type="text"
+            name="hostname"
+            id="hostname"
+            placeholder="github.company.com"
+            on:blur={onBlur}
+            value={defaultHost}
         />
-      </div>
-      {#if errors?.token?.required?.error}
-        <p class="text-red-400 dark:text-red-300">Token is required</p>
-      {/if}
-      <span class="text-sm">
-        To generate a token, go to GitHub,
-        <button
-          class="underline hover:text-gray-500 dark:hover:text-gray-300 cursor-pointer"
-          on:click={() => open('https://github.com/settings/tokens')}
-        >
-          personal access tokens
-        </button>
-      </span>
-    </div>
-    <div class="pb-2">
-      <label
-        for="hostname"
-        class="block text-sm font-bold text-gray-700 dark:text-gray-100"
-      >
-        Hostname
-      </label>
-      <div class="relative mt-1 rounded-md shadow-sm">
-        <input
-          type="text"
-          name="hostname"
-          placeholder="github.company.com"
-          id="hostname"
-          value={defaultHost}
-          on:blur={onBlur}
-          class="
-          block
-          w-full
-          rounded-md
-          border-gray-300
-          text-gray-900
-          shadow-sm
-          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
-          "
-        />
-      </div>
-      {#if errors?.hostname?.required?.error}
-        <p class="text-red-400 dark:text-red-300">Password is required</p>
-      {/if}
-      <span class="text-sm">
-        Defaults to {defaultHost}. Change only if you are using GitHub for
-        Enterprise.
-      </span>
-    </div>
-    <button
-      class={`${
-        loading ? 'opacity-50' : ''
-      } flex justify-center items-center w-full text-white font-bold bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md text-sm px-4 py-2 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800`}
-      type="submit"
-      title="Submit Button"
-      disabled={loading}
-    >
-      Submit
-      {#if loading}
-        <svg
-          class="animate-spin h-4 w-4 text-white ml-3"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          />
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          />
-        </svg>
-      {/if}
-    </button>
-  </form>
+        {#if errors?.hostname?.required?.error}
+            <p class="text-sm text-red-400 dark:text-red-300">Hostname is required</p>
+        {/if}
+
+        <div class="flex justify-end my-4">
+            <Button type="submit" disabled={loading}>
+                {#if loading}
+                    <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                {/if}
+                <span>Add account</span>
+            </Button>
+        </div>
+    </form>
 </div>
