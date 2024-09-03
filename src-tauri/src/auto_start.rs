@@ -53,6 +53,7 @@ impl AutoLaunchManager {
 }
 
 pub trait ManagerExt<R: Runtime> {
+    #[allow(dead_code)]
     fn autolaunch(&self) -> State<'_, AutoLaunchManager>;
 }
 
