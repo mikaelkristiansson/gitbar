@@ -8,15 +8,13 @@
   },
   "package": {
     "productName": "GitBar",
-    "version": "0.4.2"
+    "version": "0.4.3"
   },
   "tauri": {
     "allowlist": {
       "http": {
         "request": true,
-        "scope": [
-          "https://**"
-        ]
+        "scope": ["https://**"]
       },
       "notification": {
         "all": true
@@ -33,13 +31,7 @@
         "depends": []
       },
       "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
+      "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
       "identifier": "com.gitbar.dev",
       "longDescription": "Github reviews in your system taskbar",
       "macOS": {
@@ -62,7 +54,10 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": ["https://gitbar-update-server.vercel.app/update/{{target}}/{{current_version}}"],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEYxMTYzNDYzNzU1QzYxQkIKUldTN1lWeDFZelFXOFJBZlp3OFZYWFZvK2c3RU5xSGZwVE45ciswWGpwRUdTRXBJbzFnMmRZZlgK"
     },
     "systemTray": {
       "iconPath": "icons/tray.png",
