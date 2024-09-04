@@ -39,7 +39,6 @@
   }
 
   function onChange(e) {
-    console.log('change');
     validateField(e.target.name, e.target.value);
   }
 
