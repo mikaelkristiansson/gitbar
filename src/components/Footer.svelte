@@ -24,15 +24,10 @@
   }
 </script>
 
-<footer
-  class="fixed bottom-0 left-0 dark:bg-gray-900 bg-gray-50 shadow-md w-full px-2 py-2"
->
+<footer class="fixed bottom-0 left-0 dark:bg-gray-900 bg-gray-50 shadow-md w-full px-2 py-2">
   <div class="flex justify-between">
     <div class="p-2 flex items-center">
-      <Image
-        src={$auth.account?.user?.avatar_url}
-        class="h-6 w-6 flex-shrink-0 rounded-full"
-      >
+      <Image src={$auth.account?.user?.avatar_url} class="h-6 w-6 flex-shrink-0 rounded-full">
         <svg
           slot="error"
           xmlns="http://www.w3.org/2000/svg"
@@ -50,16 +45,12 @@
         </svg>
       </Image>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <span
+      <button
         class={`${
-          $auth.account?.user?.html_url
-            ? 'cursor-pointer hover:text-slate-600/70 dark:hover:text-white/70'
-            : ''
+          $auth.account?.user?.html_url ? 'cursor-pointer hover:text-slate-600/70 dark:hover:text-white/70' : ''
         } ml-1 block truncate`}
-        on:click={() =>
-          $auth.account?.user?.html_url
-            ? open($auth.account?.user?.html_url)
-            : null}>{$auth.account?.user?.name}</span
+        on:click={() => ($auth.account?.user?.html_url ? open($auth.account?.user?.html_url) : null)}
+        >{$auth.account?.user?.name || $auth.account?.user?.email || ''}</button
       >
     </div>
     <div class="flex justify-between">

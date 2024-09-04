@@ -1,11 +1,9 @@
 <script lang="ts">
   import { open } from '@tauri-apps/api/shell';
-  import {
-    Validators,
-    type ValidatorFn,
-    type ValidatorResult,
-  } from '../lib/validators';
+  import { Validators, type ValidatorFn, type ValidatorResult } from '../lib/validators';
   import { auth } from '../lib/auth';
+  import { onMount } from 'svelte';
+  import { resetWindowSize } from '../lib/window-size';
 
   const defaultHost = 'github.com';
   let errors: { [inputName: string]: ValidatorResult } = {};
@@ -25,24 +23,23 @@
   };
 
   function isFormValid(): boolean {
-    return !Object.values(errors).some((field) =>
-      Object.values(field).some((errorObject) => errorObject.error)
-    );
+    return !Object.values(errors).some(field => Object.values(field).some(errorObject => errorObject.error));
   }
 
   function validateForm(data: { [inputName: string]: any }): void {
-    Object.keys(data).forEach((field) => validateField(field, data[field]));
+    Object.keys(data).forEach(field => validateField(field, data[field]));
   }
 
   function validateField(field, value) {
     form[field]?.validators &&
-      form[field].validators.forEach((fn) => {
+      form[field].validators.forEach(fn => {
         const error = fn(value);
         errors[field] = { ...errors[field], ...error };
       });
   }
 
-  function onBlur(e) {
+  function onChange(e) {
+    console.log('change');
     validateField(e.target.name, e.target.value);
   }
 
@@ -64,17 +61,16 @@
       console.log('Invalid Form');
     }
   }
+
+  onMount(() => {
+    resetWindowSize();
+  });
 </script>
 
 <div class="m-8">
   <form on:submit|preventDefault={onSubmit}>
     <div class="pb-2">
-      <label
-        for="token"
-        class="block text-sm font-bold text-gray-700 dark:text-gray-100"
-      >
-        Token
-      </label>
+      <label for="token" class="block text-sm font-bold text-gray-700 dark:text-gray-100"> Token </label>
       <div class="relative mt-1 rounded-md shadow-sm">
         <input
           type="text"
@@ -89,7 +85,7 @@
           shadow-sm
           focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
         "
-          on:blur={onBlur}
+          on:input={onChange}
           placeholder="The 40 characters token generated on GitHub"
         />
       </div>
@@ -107,12 +103,7 @@
       </span>
     </div>
     <div class="pb-2">
-      <label
-        for="hostname"
-        class="block text-sm font-bold text-gray-700 dark:text-gray-100"
-      >
-        Hostname
-      </label>
+      <label for="hostname" class="block text-sm font-bold text-gray-700 dark:text-gray-100"> Hostname </label>
       <div class="relative mt-1 rounded-md shadow-sm">
         <input
           type="text"
@@ -120,7 +111,7 @@
           placeholder="github.company.com"
           id="hostname"
           value={defaultHost}
-          on:blur={onBlur}
+          on:input={onChange}
           class="
           block
           w-full
@@ -136,8 +127,7 @@
         <p class="text-red-400 dark:text-red-300">Password is required</p>
       {/if}
       <span class="text-sm">
-        Defaults to {defaultHost}. Change only if you are using GitHub for
-        Enterprise.
+        Defaults to {defaultHost}. Change only if you are using GitHub for Enterprise.
       </span>
     </div>
     <button
@@ -145,7 +135,7 @@
         loading ? 'opacity-50' : ''
       } flex justify-center items-center w-full text-white font-bold bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md text-sm px-4 py-2 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800`}
       type="submit"
-      title="Submit Button"
+      title="Submit"
       disabled={loading}
     >
       Submit
@@ -156,14 +146,7 @@
           fill="none"
           viewBox="0 0 24 24"
         >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          />
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
           <path
             class="opacity-75"
             fill="currentColor"

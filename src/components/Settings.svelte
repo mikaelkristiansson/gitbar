@@ -9,48 +9,45 @@
 
   export let modalVisible: boolean;
   let openAtStartup = $auth.settings?.openAtStartup;
-  let fetchInterval =
-    ($auth.settings.fetchInterval || defaultSettings.fetchInterval) / 1000;
+  let isCompactMode = $auth.settings?.isCompactMode;
+  let fetchInterval = ($auth.settings.fetchInterval || defaultSettings.fetchInterval) / 1000;
   let app = { name: '', version: '' };
 
-  const changeAutoStart = (e) => {
+  const changeAutoStart = e => {
     openAtStartup = e.target.checked;
+  };
+
+  const changeCompactMode = e => {
+    isCompactMode = e.target.checked;
   };
 
   const onSave = () => {
     $auth.updateSettings({
       openAtStartup,
+      isCompactMode,
       fetchInterval: fetchInterval * 1000,
     });
     modalVisible = false;
   };
   onMount(() => {
-    Promise.all([getName(), getVersion()]).then((values) => {
+    Promise.all([getName(), getVersion()]).then(values => {
       const [name, version] = values;
       app = { name, version };
     });
-    isEnabled().then((active) => {
+    isEnabled().then(active => {
       openAtStartup = active;
     });
   });
 </script>
 
-<div
-  class="flex justify-between items-start p-4 rounded-t border-b dark:border-slate-900"
->
+<div class="flex justify-between items-start p-4 rounded-t border-b dark:border-slate-900">
   <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Settings</h3>
   <button
     type="button"
     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
     on:click={() => (modalVisible = false)}
   >
-    <svg
-      aria-hidden="true"
-      class="w-5 h-5"
-      fill="currentColor"
-      viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path
         fill-rule="evenodd"
         d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -63,21 +60,14 @@
 <div class="p-6 space-y-6">
   <Theme />
   <br />
-  <Toggle
-    name="open_at_start"
-    checked={openAtStartup}
-    label="Auto start Gitbar"
-    on:change={changeAutoStart}
-  />
+  <Toggle name="open_at_start" checked={openAtStartup} label="Auto start Gitbar" on:change={changeAutoStart} />
+  <Toggle name="comact_mode" checked={isCompactMode} label="Compact mode" on:change={changeCompactMode} />
   <div>
-    <label
-      for="fetch_interval"
-      class="block text-sm font-bold text-gray-700 dark:text-gray-100 mb-4"
-    >
+    <label for="fetch_interval" class="block text-sm font-bold text-gray-700 dark:text-gray-100 mb-4">
       Fetch interval <strong>{fetchInterval} sec</strong>
     </label>
     <Range
-      on:change={(e) => (fetchInterval = e.detail.value)}
+      on:change={e => (fetchInterval = e.detail.value)}
       initialValue={fetchInterval}
       min={5}
       max={60}
