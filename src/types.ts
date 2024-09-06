@@ -1,6 +1,6 @@
 export interface User {
   login: string;
-  name: string;
+  name?: string;
   id: number;
   avatar_url: string;
   html_url?: string;
@@ -16,6 +16,7 @@ export interface AuthState {
 
 export interface SettingsState {
   openAtStartup: boolean;
+  isCompactMode: boolean;
   fetchInterval: number;
 }
 
@@ -48,6 +49,10 @@ export interface Review {
           name: string;
         }>;
       };
+      statusCheckRollup: {
+        state: 'SUCCESS' | 'FAILURE';
+      };
+      isReadByViewer: boolean;
     };
   }>;
 }

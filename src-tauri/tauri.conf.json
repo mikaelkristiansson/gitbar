@@ -7,8 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "GitBar",
-    "version": "0.4.4"
+    "productName": "GitBar"
   },
   "tauri": {
     "allowlist": {
@@ -21,6 +20,9 @@
       },
       "shell": {
         "open": true
+      },
+      "window": {
+        "setSize": true
       }
     },
     "bundle": {

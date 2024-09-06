@@ -6,6 +6,7 @@ import { clearState, loadState, saveState } from './storage';
 
 export const defaultSettings: SettingsState = {
   openAtStartup: false,
+  isCompactMode: false,
   fetchInterval: 30000,
 };
 
@@ -17,7 +18,7 @@ const signIn = async ({ token, hostname }: AuthTokenOptions) => {
       hostname,
       user,
     };
-    auth.update((prevAuth) => ({
+    auth.update(prevAuth => ({
       ...prevAuth,
       account,
     }));
@@ -26,7 +27,7 @@ const signIn = async ({ token, hostname }: AuthTokenOptions) => {
 };
 
 const signOut = () => {
-  auth.update((prevAuth) => ({
+  auth.update(prevAuth => ({
     ...prevAuth,
     account: null,
   }));
@@ -40,7 +41,7 @@ const updateSettings = (data: SettingsState) => {
     case false:
       disable();
   }
-  auth.update((prevAuth) => {
+  auth.update(prevAuth => {
     const newSettings = {
       ...prevAuth.settings,
       ...data,

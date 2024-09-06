@@ -1,10 +1,7 @@
 import type { AuthState, Review, User } from '../types';
 import { getClient, ResponseType, Body } from '@tauri-apps/api/http';
 
-export const getUserData = async (
-  token: string,
-  hostname: string
-): Promise<User> => {
+export const getUserData = async (token: string, hostname: string): Promise<User> => {
   const client = await getClient();
   const response: {
     data: User;
@@ -48,6 +45,18 @@ export const getReviews = async (account: AuthState): Promise<Review> => {
             url
             title
             changedFiles
+            labels(first: 10) {
+              edges {
+                node {
+                  color
+                  name
+                }
+              }
+            }
+            statusCheckRollup {
+              state
+            }
+            isReadByViewer
           }
         }
       }
@@ -64,15 +73,11 @@ export const getReviews = async (account: AuthState): Promise<Review> => {
         search: Review;
       };
     };
-  } = await client.post(
-    `https://api.${account.hostname}/graphql`,
-    Body.text(JSON.stringify(body)),
-    {
-      headers: {
-        Authorization: `token ${account.token}`,
-      },
-    }
-  );
+  } = await client.post(`https://api.${account.hostname}/graphql`, Body.text(JSON.stringify(body)), {
+    headers: {
+      Authorization: `token ${account.token}`,
+    },
+  });
   const { data } = response;
   return data.data.search;
 };
