@@ -3,10 +3,9 @@
     windows_subsystem = "windows"
 )]
 
-use tauri::{
-    CustomMenuItem, Menu, MenuItem, PhysicalPosition, SystemTray, SystemTrayEvent, SystemTrayMenu,
-};
+use tauri::{CustomMenuItem, Menu, MenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri::{Manager, Submenu};
+use tauri_plugin_positioner::{Position, WindowExt as WindowExtTrait};
 
 mod auto_start;
 
@@ -96,23 +95,20 @@ fn main() {
     let menu = Menu::new().add_submenu(edit_menu);
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_positioner::init())
+        .on_system_tray_event(|app, event| {
+            tauri_plugin_positioner::on_tray_event(app, &event);
+        })
         .menu(menu)
         .system_tray(system_tray)
         .on_system_tray_event(move |app, event| match event {
-            SystemTrayEvent::LeftClick { position, size, .. } => {
+            SystemTrayEvent::LeftClick { .. } => {
                 let w = app.get_window("main").unwrap();
                 let visible = w.is_visible().unwrap();
                 if visible {
                     w.hide().unwrap();
                 } else {
-                    let window_size = w.outer_size().unwrap();
-                    let physical_pos = PhysicalPosition {
-                        x: position.x as i32 + (size.width as i32 / 2)
-                            - (window_size.width as i32 / 2),
-                        y: position.y as i32 - window_size.height as i32,
-                    };
-
-                    let _ = w.set_position(tauri::Position::Physical(physical_pos));
+                    let _ = w.move_window(Position::TrayCenter);
                     w.show().unwrap();
                     w.set_focus().unwrap();
                 }
