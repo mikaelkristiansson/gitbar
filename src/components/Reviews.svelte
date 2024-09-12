@@ -14,7 +14,7 @@
     open(url);
   }
   const interval = setInterval(() => {
-    $github.fetchReviews($auth.account);
+    $github.fetchReviews($auth.account, $auth.githubSettings);
     dateUpdater++;
     const ele = document.getElementById('reviews');
     setWindowSize(ele.clientHeight);
@@ -27,7 +27,7 @@
   };
 
   onMount(() => {
-    $github.fetchReviews($auth.account).finally(() => (loading = false));
+    $github.fetchReviews($auth.account, $auth.githubSettings).finally(() => (loading = false));
   });
 
   onDestroy(() => clearInterval(interval));

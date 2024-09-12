@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { AuthTokenOptions, SettingsState } from '../types';
+import type { AuthTokenOptions, GithubSettings, SettingsState } from '../types';
 import { getUserData } from './api';
 import { disable, enable } from './auto-start';
 import { clearState, loadState, saveState } from './storage';
@@ -8,6 +8,12 @@ export const defaultSettings: SettingsState = {
   openAtStartup: false,
   isCompactMode: false,
   fetchInterval: 30000,
+};
+
+export const defaultGithubSettings: GithubSettings = {
+  archive: false,
+  type: 'review-requested',
+  state: 'open',
 };
 
 const signIn = async ({ token, hostname }: AuthTokenOptions) => {
@@ -22,7 +28,7 @@ const signIn = async ({ token, hostname }: AuthTokenOptions) => {
       ...prevAuth,
       account,
     }));
-    saveState(account, defaultSettings);
+    saveState(account, defaultSettings, defaultGithubSettings);
   }
 };
 
@@ -46,10 +52,24 @@ const updateSettings = (data: SettingsState) => {
       ...prevAuth.settings,
       ...data,
     };
-    saveState(prevAuth.account, newSettings);
+    saveState(prevAuth.account, newSettings, prevAuth.githubSettings);
     return {
       ...prevAuth,
       settings: newSettings,
+    };
+  });
+};
+
+const updateGithubSettings = (data: GithubSettings) => {
+  auth.update(prevAuth => {
+    const newGHSettings = {
+      ...prevAuth.githubSettings,
+      ...data,
+    };
+    saveState(prevAuth.account, prevAuth.settings, newGHSettings);
+    return {
+      ...prevAuth,
+      githubSettings: newGHSettings,
     };
   });
 };
@@ -61,5 +81,7 @@ export const auth = writable({
   signOut,
   account: prevState.account,
   settings: prevState.settings || defaultSettings,
+  githubSettings: prevState.githubSettings || defaultGithubSettings,
   updateSettings,
+  updateGithubSettings,
 });

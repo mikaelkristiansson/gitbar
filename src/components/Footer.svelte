@@ -11,7 +11,7 @@
 
   const startFetch = () => {
     fetching = true;
-    $github.fetchReviews($auth.account).finally(() => {
+    $github.fetchReviews($auth.account, $auth.githubSettings).finally(() => {
       fetching = false;
     });
   };

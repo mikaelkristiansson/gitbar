@@ -20,6 +20,12 @@ export interface SettingsState {
   fetchInterval: number;
 }
 
+export interface GithubSettings {
+  archive: boolean;
+  type: 'review-requested' | 'author' | 'mentions' | 'assignee';
+  state: 'open' | 'closed' | 'all';
+}
+
 export enum Appearance {
   light = 'light',
   dark = 'dark',
