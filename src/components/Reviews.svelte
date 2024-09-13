@@ -23,7 +23,7 @@
   const onLoad = (ele: Element) => {
     setTimeout(() => {
       setWindowSize(ele.clientHeight);
-    }, 1000);
+    }, 100);
   };
 
   onMount(() => {

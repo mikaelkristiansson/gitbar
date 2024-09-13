@@ -142,7 +142,7 @@
   <Settings bind:modalVisible />
 </Modal>
 <Modal bind:modalVisible={filterVisible} on:keydown={keydown}>
-  <Filters bind:modalVisible={filterVisible} />
+  <Filters bind:modalVisible={filterVisible} onSaved={startFetch} />
 </Modal>
 
 <style>

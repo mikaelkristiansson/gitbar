@@ -1,10 +1,27 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import Toggle from './Toggle.svelte';
+  import { auth } from '../lib/auth';
+  import Select from './Select.svelte';
 
   export let modalVisible: boolean;
+  export let onSaved: () => void;
+  let showArchive = $auth.githubSettings.archive;
+  let state = $auth.githubSettings.state;
+  let type = $auth.githubSettings.type;
+
+  const changeShowArchive = e => {
+    showArchive = e.target.checked;
+  };
 
   const onSave = () => {
+    $auth.updateGithubSettings({
+      archive: showArchive,
+      state,
+      type,
+    });
     modalVisible = false;
+    onSaved();
   };
   onMount(() => {});
 </script>
@@ -27,6 +44,32 @@
   </button>
 </div>
 <div class="p-6 space-y-6">
+  <div>
+    <Toggle name="archive" checked={showArchive} label="Show archived" on:change={changeShowArchive} />
+    <Select
+      name="type"
+      label="Type"
+      options={[
+        { value: 'review-requested', label: 'Reviews' },
+        { value: 'author', label: 'Created' },
+        { value: 'mentions', label: 'Mentions' },
+        { value: 'assignee', label: 'Assigned' },
+      ]}
+      selected={type}
+      onChange={e => (type = e.target.value)}
+    />
+    <Select
+      name="state"
+      label="State"
+      options={[
+        { value: 'open', label: 'Open' },
+        { value: 'closed', label: 'Closed' },
+        { value: 'all', label: 'All' },
+      ]}
+      selected={state}
+      onChange={e => (state = e.target.value)}
+    />
+  </div>
   <div class="relative mt-4 flex items-end justify-end">
     <button
       type="button"
