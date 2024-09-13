@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import Toggle from './Toggle.svelte';
   import { auth } from '../lib/auth';
   import Select from './Select.svelte';
@@ -23,7 +22,6 @@
     modalVisible = false;
     onSaved();
   };
-  onMount(() => {});
 </script>
 
 <div class="flex justify-between items-start p-4 rounded-t border-b dark:border-slate-900">
