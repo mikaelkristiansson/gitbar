@@ -36,6 +36,22 @@ export interface AuthTokenOptions {
   token: string;
 }
 
+export type GetAccessTokenArgs = {
+  clientId: string;
+  clientSecret: string;
+  code: string;
+  hostname: string;
+};
+
+export type GetAccessTokenResponse = {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  refresh_token_expires_in: number;
+  scope: string;
+  token_type: string;
+};
+
 export interface Review {
   issueCount: number;
   edges: Array<{

@@ -175,7 +175,7 @@
                     {/if} Checks
                   </span>
                 </div>
-                <div class="flex flex-row gap-1 mt-1">
+                <div class="flex flex-row gap-1 mt-1 flex-wrap">
                   {#each review.node.labels.edges as label}
                     {#if $appearance.theme === 'dark'}
                       <span

@@ -3,6 +3,7 @@ import type { AuthTokenOptions, GithubSettings, SettingsState } from '../types';
 import { getUserData } from './api';
 import { disable, enable } from './auto-start';
 import { clearState, loadState, saveState } from './storage';
+import { createURL } from './url';
 
 export const defaultSettings: SettingsState = {
   openAtStartup: false,
@@ -15,6 +16,19 @@ export const defaultGithubSettings: GithubSettings = {
   type: 'review-requested',
   state: 'open',
 };
+
+const GITHUB_AUTHORIZE_ENDPOINT = 'https://github.com/login/oauth/authorize';
+const GITHUB_AUTH_SCOPES = ['repo', 'read:user'];
+
+export function createAuthURL(port: number) {
+  const GITHUB_AUTH_QUERIES = {
+    client_id: import.meta.env.VITE_CLIENT_ID,
+    scope: GITHUB_AUTH_SCOPES.join(' '),
+    redirect_uri: `http://localhost:${port}/callback`,
+  };
+
+  return createURL({ url: GITHUB_AUTHORIZE_ENDPOINT, query: GITHUB_AUTH_QUERIES });
+}
 
 const signIn = async ({ token, hostname }: AuthTokenOptions) => {
   const user = await getUserData(token, hostname);

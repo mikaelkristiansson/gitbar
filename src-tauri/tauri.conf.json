@@ -13,7 +13,14 @@
     "allowlist": {
       "http": {
         "request": true,
-        "scope": ["https://**"]
+        "scope": [
+          "https://**",
+          "https://github.com/*",
+          "https://api.github.com/*",
+          "http://localhost:44212/*",
+          "http://localhost:23212/*",
+          "http://localhost:44331/*"
+        ]
       },
       "notification": {
         "all": true
