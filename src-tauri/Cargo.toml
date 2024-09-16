@@ -1,6 +1,6 @@
 [package]
 name = "gitbar"
-version = "0.5.1"
+version = "0.6.0"
 description = "Github review counter"
 authors = ["mikael.kristiansson"]
 license = "MIT"
