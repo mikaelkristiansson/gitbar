@@ -3,11 +3,18 @@
     windows_subsystem = "windows"
 )]
 
+mod auto_start;
+mod commands;
+mod server;
+mod utils;
+
 use tauri::{CustomMenuItem, Menu, MenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri::{Manager, Submenu};
 use tauri_plugin_positioner::{Position, WindowExt as WindowExtTrait};
 
-mod auto_start;
+use commands::{set_review_count, start_server, stop_server};
+use server::AuthServer;
+use std::sync::Mutex;
 
 #[cfg(target_os = "macos")]
 use cocoa::appkit::{NSWindow, NSWindowButton, NSWindowStyleMask, NSWindowTitleVisibility};
@@ -63,17 +70,6 @@ impl<R: Runtime> WindowExt for Window<R> {
             });
         }
     }
-}
-
-#[tauri::command]
-fn set_review_count(app_handle: tauri::AppHandle, count: &str) {
-    let mut rev_count = count.to_string();
-    let count_number = count.parse::<i32>().unwrap_or_default();
-    if count_number > 0 {
-        rev_count.insert_str(0, " ");
-    }
-    #[cfg(target_os = "macos")]
-    app_handle.tray_handle().set_title(&rev_count).unwrap();
 }
 
 fn main() {
@@ -148,7 +144,12 @@ fn main() {
             }
             _ => {}
         })
-        .invoke_handler(tauri::generate_handler![set_review_count])
+        .manage(Mutex::new(AuthServer::new()))
+        .invoke_handler(tauri::generate_handler![
+            set_review_count,
+            start_server,
+            stop_server
+        ])
         .plugin(auto_start::init(None))
         .setup(|app| {
             #[cfg(target_os = "macos")]

@@ -1,5 +1,28 @@
-import type { AuthState, Review, User } from '../types';
-import { getClient, ResponseType, Body } from '@tauri-apps/api/http';
+import type { AuthState, GetAccessTokenArgs, GetAccessTokenResponse, GithubSettings, Review, User } from '../types';
+import { getClient, fetch, ResponseType, Body } from '@tauri-apps/api/http';
+
+export async function getAccessToken({ clientId, clientSecret, code, hostname }: GetAccessTokenArgs) {
+  const body = Body.json({
+    client_id: clientId,
+    client_secret: clientSecret,
+    code,
+  });
+
+  const res = await fetch<GetAccessTokenResponse>(`https://${hostname}/login/oauth/access_token`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+    body,
+    responseType: ResponseType.JSON,
+  });
+
+  if (!res.ok) {
+    throw res;
+  }
+
+  return res;
+}
 
 export const getUserData = async (token: string, hostname: string): Promise<User> => {
   const client = await getClient();
@@ -25,8 +48,8 @@ export const getUserData = async (token: string, hostname: string): Promise<User
   };
 };
 
-export const getReviews = async (account: AuthState): Promise<Review> => {
-  const search = `type:pr state:open review-requested:${account.user?.login}`;
+export const getReviews = async (account: AuthState, settings: GithubSettings): Promise<Review> => {
+  const search = `type:pr state:${settings.state} archived:${settings.archive} ${settings.type}:${account.user?.login}`;
   const text = `
   {
     search(query: "${search}", type: ISSUE, first: 100) {

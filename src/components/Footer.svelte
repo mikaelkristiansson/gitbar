@@ -5,13 +5,15 @@
   import Image from './Image.svelte';
   import Modal from './Modal.svelte';
   import Settings from './Settings.svelte';
+  import Filters from './Filters.svelte';
 
   let fetching = false;
   let modalVisible = false;
+  let filterVisible = false;
 
   const startFetch = () => {
     fetching = true;
-    $github.fetchReviews($auth.account).finally(() => {
+    $github.fetchReviews($auth.account, $auth.githubSettings).finally(() => {
       fetching = false;
     });
   };
@@ -19,6 +21,7 @@
   function keydown(e: KeyboardEvent) {
     if (e.key === 'Escape' && e.target) {
       modalVisible = false;
+      filterVisible = false;
       e.preventDefault();
     }
   }
@@ -76,6 +79,24 @@
       </button>
       <button
         class="p-2 dark:text-white dark:hover:text-white/70 text-slate-600 hover:text-slate-600/70"
+        on:click={() => (filterVisible = true)}
+        title="Filter"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+          class="w-6 h-6"
+          stroke="none"
+          fill="currentColor"
+          ><path
+            d="M2.75 6a.75.75 0 0 0 0 1.5h18.5a.75.75 0 0 0 0-1.5H2.75ZM6 11.75a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H6.75a.75.75 0 0 1-.75-.75Zm4 4.938a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"
+          ></path></svg
+        >
+      </button>
+      <button
+        class="p-2 dark:text-white dark:hover:text-white/70 text-slate-600 hover:text-slate-600/70"
         on:click={() => (modalVisible = true)}
         title="Settings"
       >
@@ -120,6 +141,9 @@
 
 <Modal bind:modalVisible on:keydown={keydown}>
   <Settings bind:modalVisible />
+</Modal>
+<Modal bind:modalVisible={filterVisible} on:keydown={keydown}>
+  <Filters bind:modalVisible={filterVisible} onSaved={startFetch} />
 </Modal>
 
 <style>

@@ -29,3 +29,6 @@ yarn tauri:dev
 ```sh
 yarn tauri:build
 ```
+
+## Icons
+https://primer.style/foundations/icons/

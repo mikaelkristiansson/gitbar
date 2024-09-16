@@ -61,7 +61,7 @@
   <Theme />
   <br />
   <Toggle name="open_at_start" checked={openAtStartup} label="Auto start Gitbar" on:change={changeAutoStart} />
-  <Toggle name="comact_mode" checked={isCompactMode} label="Compact mode" on:change={changeCompactMode} />
+  <Toggle name="compact_mode" checked={isCompactMode} label="Compact mode" on:change={changeCompactMode} />
   <div>
     <label for="fetch_interval" class="block text-sm font-bold text-gray-700 dark:text-gray-100 mb-4">
       Fetch interval <strong>{fetchInterval} sec</strong>

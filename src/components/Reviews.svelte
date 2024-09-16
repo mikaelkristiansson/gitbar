@@ -14,7 +14,7 @@
     open(url);
   }
   const interval = setInterval(() => {
-    $github.fetchReviews($auth.account);
+    $github.fetchReviews($auth.account, $auth.githubSettings);
     dateUpdater++;
     const ele = document.getElementById('reviews');
     setWindowSize(ele.clientHeight);
@@ -23,11 +23,11 @@
   const onLoad = (ele: Element) => {
     setTimeout(() => {
       setWindowSize(ele.clientHeight);
-    }, 1000);
+    }, 100);
   };
 
   onMount(() => {
-    $github.fetchReviews($auth.account).finally(() => (loading = false));
+    $github.fetchReviews($auth.account, $auth.githubSettings).finally(() => (loading = false));
   });
 
   onDestroy(() => clearInterval(interval));
@@ -175,7 +175,7 @@
                     {/if} Checks
                   </span>
                 </div>
-                <div class="flex flex-row gap-1 mt-1">
+                <div class="flex flex-row gap-1 mt-1 flex-wrap">
                   {#each review.node.labels.edges as label}
                     {#if $appearance.theme === 'dark'}
                       <span

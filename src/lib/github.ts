@@ -1,12 +1,8 @@
 import { writable } from 'svelte/store';
-import type { AuthState } from '../types';
+import type { AuthState, GithubSettings } from '../types';
 import { getReviews } from './api';
 import { invoke } from '@tauri-apps/api';
-import {
-  isPermissionGranted,
-  requestPermission,
-  sendNotification,
-} from '@tauri-apps/api/notification';
+import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 
 const reviews = {
   count: 0,
@@ -27,8 +23,8 @@ async function notification(text: string) {
   }
 }
 
-const fetchReviews = async (account: AuthState) => {
-  const res = await getReviews(account);
+const fetchReviews = async (account: AuthState, githubSettings: GithubSettings) => {
+  const res = await getReviews(account, githubSettings);
   let prevCount: number;
   github.subscribe(({ reviews }) => (prevCount = reviews.count));
 
@@ -38,7 +34,7 @@ const fetchReviews = async (account: AuthState) => {
     notification(`${title} - @${author}`);
   }
   if (res.issueCount !== prevCount) {
-    github.update((prev) => ({
+    github.update(prev => ({
       ...prev,
       reviews: {
         count: res.issueCount,
