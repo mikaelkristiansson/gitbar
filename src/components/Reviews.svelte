@@ -17,12 +17,16 @@
     $github.fetchReviews($auth.account, $auth.githubSettings);
     dateUpdater++;
     const ele = document.getElementById('reviews');
-    setWindowSize(ele.clientHeight);
+    if (ele) {
+      setWindowSize(ele.clientHeight);
+    }
   }, $auth.settings.fetchInterval || defaultSettings.fetchInterval);
 
   const onLoad = (ele: Element) => {
     setTimeout(() => {
-      setWindowSize(ele.clientHeight);
+      if (ele) {
+        setWindowSize(ele.clientHeight);
+      }
     }, 100);
   };
 
@@ -144,7 +148,7 @@
                 <div class="flex flex-row items-center gap-1">
                   {#key dateUpdater}
                     <span class="text-sm text-gray-500 truncate dark:text-gray-400">
-                      {timeAgo(review.node.createdAt)} by @{review.node.author.login}
+                      {timeAgo(review.node.createdAt)} by @{review.node.author?.login || 'ghost'}
                     </span>
                   {/key}
                   <span
