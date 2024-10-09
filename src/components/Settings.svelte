@@ -40,8 +40,8 @@
   });
 </script>
 
-<div class="flex justify-between items-start p-4 rounded-t border-b dark:border-slate-900">
-  <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Settings</h3>
+<div class="flex justify-between items-start px-4 py-2 rounded-t border-b dark:border-slate-900">
+  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Settings</h3>
   <button
     type="button"
     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"

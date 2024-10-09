@@ -24,6 +24,7 @@ export interface GithubSettings {
   archive: boolean;
   type: 'review-requested' | 'author' | 'mentions' | 'assignee';
   state: 'open' | 'closed' | 'all';
+  organizations?: string[];
 }
 
 export enum Appearance {
