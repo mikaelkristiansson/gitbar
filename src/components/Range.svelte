@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
@@ -6,23 +6,22 @@
   export let min = 0;
   export let max = 100;
   export let initialValue = 0;
-  export let id = null;
-  export let value =
-    typeof initialValue === 'string' ? parseInt(initialValue) : initialValue;
+  export let id: string | null = null;
+  export let value = typeof initialValue === 'string' ? parseInt(initialValue) : initialValue;
 
   // Node Bindings
-  let container = null;
-  let thumb = null;
-  let progressBar = null;
-  let element = null;
+  let container: any = null;
+  let thumb: any = null;
+  let progressBar: any = null;
+  let element: any = null;
 
   // Internal State
-  let elementX = null;
-  let currentThumb = null;
+  let elementX: any = null;
+  let currentThumb: any = null;
   let holding = false;
   let thumbHover = false;
   let keydownAcceleration = 0;
-  let accelerationTimer = null;
+  let accelerationTimer: any = null;
 
   // Dispatch 'change' events
   const dispatch = createEventDispatcher();
@@ -31,7 +30,7 @@
   // ie. hover events on other elements while dragging. Especially for Safari
   const mouseEventShield = document.createElement('div');
   mouseEventShield.setAttribute('class', 'mouse-over-shield');
-  mouseEventShield.addEventListener('mouseover', (e) => {
+  mouseEventShield.addEventListener('mouseover', e => {
     e.preventDefault();
     e.stopPropagation();
   });
@@ -41,32 +40,27 @@
   }
 
   // Allows both bind:value and on:change for parent value retrieval
-  function setValue(val) {
+  function setValue(val: number) {
     value = val;
     dispatch('change', { value });
   }
 
-  function onTrackEvent(e) {
+  function onTrackEvent(e: any) {
     // Update value immediately before beginning drag
     updateValueOnEvent(e);
     onDragStart(e);
   }
 
-  function onHover(e) {
-    thumbHover = thumbHover ? false : true;
-  }
-
-  function onDragStart(e) {
+  function onDragStart(e: any) {
     // If mouse event add a pointer events shield
     if (e.type === 'mousedown') document.body.append(mouseEventShield);
     currentThumb = thumb;
   }
 
-  function onDragEnd(e) {
+  function onDragEnd(e: any) {
     // If using mouse - remove pointer event shield
     if (e.type === 'mouseup') {
-      if (document.body.contains(mouseEventShield))
-        document.body.removeChild(mouseEventShield);
+      if (document.body.contains(mouseEventShield)) document.body.removeChild(mouseEventShield);
       // Needed to check whether thumb and mouse overlap after shield removed
       if (isMouseInElement(e, thumb)) thumbHover = true;
     }
@@ -74,7 +68,7 @@
   }
 
   // Check if mouse event cords overlay with an element's area
-  function isMouseInElement(event, element) {
+  function isMouseInElement(event: any, element: any) {
     let rect = element.getBoundingClientRect();
     let { clientX: x, clientY: y } = event;
     if (x < rect.left || x >= rect.right) return false;
@@ -83,7 +77,7 @@
   }
 
   // Accessible keypress handling
-  function onKeyPress(e) {
+  function onKeyPress(e: any) {
     // Max out at +/- 10 to value per event (50 events / 5)
     // 100 below is to increase the amount of events required to reach max velocity
     if (keydownAcceleration < 50) keydownAcceleration++;
@@ -109,7 +103,7 @@
     accelerationTimer = setTimeout(() => (keydownAcceleration = 1), 100);
   }
 
-  function calculateNewValue(clientX) {
+  function calculateNewValue(clientX: number) {
     // Find distance between cursor and element's left cord (20px / 2 = 10px) - Center of thumb
     let delta = clientX - (elementX + 10);
 
@@ -125,19 +119,15 @@
   }
 
   // Handles both dragging of touch/mouse as well as simple one-off click/touches
-  function updateValueOnEvent(e) {
+  function updateValueOnEvent(e: any) {
     // touchstart && mousedown are one-off updates, otherwise expect a currentPointer node
-    if (!currentThumb && e.type !== 'touchstart' && e.type !== 'mousedown')
-      return false;
+    if (!currentThumb && e.type !== 'touchstart' && e.type !== 'mousedown') return false;
 
     if (e.stopPropagation) e.stopPropagation();
     if (e.preventDefault) e.preventDefault();
 
     // Get client's x cord either touch or mouse
-    const clientX =
-      e.type === 'touchmove' || e.type === 'touchstart'
-        ? e.touches[0].clientX
-        : e.clientX;
+    const clientX = e.type === 'touchmove' || e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
 
     calculateNewValue(clientX);
   }
@@ -188,6 +178,7 @@
     <div class="range__track" bind:this={container}>
       <div class="range__track--highlighted" bind:this={progressBar} />
       <!-- svelte-ignore a11y-mouse-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div
         class="range__thumb"
         class:range__thumb--holding={holding}
@@ -198,11 +189,7 @@
         on:mouseout={() => (thumbHover = false)}
       >
         {#if holding || thumbHover}
-          <div
-            class="range__tooltip"
-            in:fly={{ y: 7, duration: 200 }}
-            out:fade={{ duration: 100 }}
-          >
+          <div class="range__tooltip" in:fly={{ y: 7, duration: 200 }} out:fade={{ duration: 100 }}>
             {value}
           </div>
         {/if}
@@ -240,7 +227,9 @@
   }
 
   .range__wrapper:focus-visible > .range__track {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px var(--track-focus, #6185ff);
+    box-shadow:
+      0 0 0 2px white,
+      0 0 0 3px var(--track-focus, #6185ff);
   }
 
   .range__track {
@@ -271,16 +260,13 @@
     margin-top: -8px;
     transition: box-shadow 100ms;
     user-select: none;
-    box-shadow: var(
-      --thumb-boxshadow,
-      0 1px 1px 0 rgba(0, 0, 0, 0.14),
-      0 0px 2px 1px rgba(0, 0, 0, 0.2)
-    );
+    box-shadow: var(--thumb-boxshadow, 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 0px 2px 1px rgba(0, 0, 0, 0.2));
   }
 
   .range__thumb--holding,
   .range__thumb:hover {
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+    box-shadow:
+      0 1px 1px 0 rgba(0, 0, 0, 0.14),
       0 1px 2px 1px rgba(0, 0, 0, 0.2),
       0 0 0 6px var(--thumb-holding-outline, rgba(113, 119, 250, 0.3));
   }

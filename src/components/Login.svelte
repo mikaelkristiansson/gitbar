@@ -9,13 +9,17 @@
   import { getAccessToken, getUserData } from '../lib/api';
   import { listen } from '@tauri-apps/api/event';
   import { saveState } from '../lib/storage';
+  import { Button } from '$lib/components/ui/button';
+  import { cn } from '$lib/utils';
+  import { Input } from '$lib/components/ui/input';
+  import { Label } from '$lib/components/ui/label';
 
   const defaultHost = 'github.com';
   let errors: { [inputName: string]: ValidatorResult } = {};
   let loading = false;
   let processing = false;
   let port: number;
-  let unlistenFn;
+  let unlistenFn: () => void;
 
   let form: {
     [inputName: string]: {
@@ -38,7 +42,7 @@
     Object.keys(data).forEach(field => validateField(field, data[field]));
   }
 
-  function validateField(field, value) {
+  function validateField(field: string, value: string) {
     form[field]?.validators &&
       form[field].validators.forEach(fn => {
         const error = fn(value);
@@ -46,12 +50,12 @@
       });
   }
 
-  function onChange(e) {
-    validateField(e.target.name, e.target.value);
+  function onChange(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
+    validateField(e.currentTarget.name, e.currentTarget.value);
   }
 
-  function onSubmit(e) {
-    const formData = new FormData(e.target);
+  function onSubmit(e: SubmitEvent & { currentTarget: HTMLFormElement }) {
+    const formData = new FormData(e.currentTarget);
 
     const data: any = {};
     for (let field of formData) {
@@ -117,27 +121,17 @@
 <div class="m-8">
   <form on:submit|preventDefault={onSubmit}>
     <div class="pb-2">
-      <label for="token" class="block text-sm font-bold text-gray-700 dark:text-gray-100"> Token </label>
-      <div class="relative mt-1 rounded-md shadow-sm">
-        <input
-          type="text"
-          name="token"
-          id="token"
-          class="
-          block
-          w-full
-          rounded-md
-          text-gray-900
-          border-gray-300
-          shadow-sm
-          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
-        "
-          on:input={onChange}
-          placeholder="The 40 characters token generated on GitHub"
-        />
-      </div>
+      <Label for="token">Token</Label>
+      <Input
+        type="text"
+        name="token"
+        id="token"
+        on:input={onChange}
+        placeholder="The 40 characters token generated on GitHub"
+        class="w-full"
+      />
       {#if errors?.token?.required?.error}
-        <p class="text-red-400 dark:text-red-300">Token is required</p>
+        <p class="text-red-400 dark:text-red-300 text-sm">Token is required</p>
       {/if}
       <span class="text-sm">
         To generate a token, go to GitHub,
@@ -150,26 +144,16 @@
       </span>
     </div>
     <div class="pb-2">
-      <label for="hostname" class="block text-sm font-bold text-gray-700 dark:text-gray-100"> Hostname </label>
-      <div class="relative mt-1 rounded-md shadow-sm">
-        <input
-          type="text"
-          name="hostname"
-          placeholder="github.company.com"
-          id="hostname"
-          value={defaultHost}
-          on:input={onChange}
-          class="
-          block
-          w-full
-          rounded-md
-          border-gray-300
-          text-gray-900
-          shadow-sm
-          focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50
-          "
-        />
-      </div>
+      <Label for="hostname">Hostname</Label>
+      <Input
+        type="text"
+        name="hostname"
+        placeholder="github.company.com"
+        id="hostname"
+        value={defaultHost}
+        on:input={onChange}
+        class="w-full"
+      />
       {#if errors?.hostname?.required?.error}
         <p class="text-red-400 dark:text-red-300">Password is required</p>
       {/if}
@@ -178,16 +162,14 @@
       </span>
     </div>
     <div class="flex flex-col items-center gap-1">
-      <button
-        class={`${
-          loading ? 'opacity-50' : ''
-        } flex justify-center items-center w-full text-white font-bold bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-md text-sm px-4 py-1.5 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800`}
-        type="submit"
-        title="Submit"
+      <Button
+        variant="default"
+        size="sm"
+        class={cn('w-full', loading && 'opacity-50')}
         disabled={loading}
-      >
-        Submit
-        {#if loading}
+        title="Submit"
+        type="submit"
+        >Submit {#if loading}
           <svg
             class="animate-spin h-4 w-4 text-white ml-3"
             xmlns="http://www.w3.org/2000/svg"
@@ -201,15 +183,16 @@
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
-        {/if}
-      </button>
+        {/if}</Button
+      >
       OR
-      <button
-        type="button"
+      <Button
+        variant="secondary"
+        size="sm"
+        class={cn('w-full', processing && 'opacity-50')}
+        disabled={processing}
         on:click={handleToken}
-        class={`${
-          processing ? 'opacity-50' : ''
-        } flex justify-center items-center w-full text-white font-bold bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-md text-sm px-4 py-1.5 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800`}
+        title="Login via GitHub"
         >Login via GitHub
         {#if processing}
           <svg
@@ -225,8 +208,8 @@
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
-        {/if}</button
-      >
+        {/if}
+      </Button>
     </div>
   </form>
 </div>

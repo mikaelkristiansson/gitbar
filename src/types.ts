@@ -24,6 +24,7 @@ export interface GithubSettings {
   archive: boolean;
   type: 'review-requested' | 'author' | 'mentions' | 'assignee';
   state: 'open' | 'closed' | 'all';
+  organizations?: string[];
 }
 
 export enum Appearance {
@@ -61,14 +62,18 @@ export interface Review {
       };
       author: {
         login: string;
+        __typename: 'User' | 'Bot';
       };
-      createdAt: string;
+      createdAt: Date;
       number: string;
       url: string;
       title: string;
       labels: {
-        nodes: Array<{
-          name: string;
+        edges: Array<{
+          node: {
+            name: string;
+            color: string;
+          };
         }>;
       };
       statusCheckRollup: {

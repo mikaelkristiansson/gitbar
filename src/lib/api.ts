@@ -49,7 +49,11 @@ export const getUserData = async (token: string, hostname: string): Promise<User
 };
 
 export const getReviews = async (account: AuthState, settings: GithubSettings): Promise<Review> => {
-  const search = `type:pr state:${settings.state} archived:${settings.archive} ${settings.type}:${account.user?.login}`;
+  const orgs = settings.organizations?.map(org => `user:${org}`).join(' ');
+  let search = `type:pr state:${settings.state} archived:${settings.archive} ${settings.type}:${account.user?.login}`;
+  if (orgs) {
+    search += ` ${orgs}`;
+  }
   const text = `
   {
     search(query: "${search}", type: ISSUE, first: 100) {
@@ -62,6 +66,7 @@ export const getReviews = async (account: AuthState, settings: GithubSettings): 
             }
             author {
               login
+              __typename
             }
             createdAt
             number
@@ -103,4 +108,46 @@ export const getReviews = async (account: AuthState, settings: GithubSettings): 
   });
   const { data } = response;
   return data.data.search;
+};
+
+export const getOrganizations = async (account: AuthState): Promise<string[]> => {
+  const client = await getClient();
+  const text = `
+  {
+    viewer {
+      login
+      organizations(first: 10) {
+        nodes {
+          login
+        }
+      }
+    }
+  }
+`;
+  const body = {
+    query: text,
+  };
+  const response: {
+    data: {
+      data: {
+        viewer: {
+          login: string;
+          organizations: {
+            nodes: Array<{
+              login: string;
+            }>;
+          };
+        };
+      };
+    };
+  } = await client.post(`https://api.${account.hostname}/graphql`, Body.text(JSON.stringify(body)), {
+    headers: {
+      Authorization: `token ${account.token}`,
+    },
+  });
+
+  const { data } = response;
+  const orgs = data.data.viewer.organizations.nodes.map(org => org.login);
+  orgs.unshift(data.data.viewer.login);
+  return orgs;
 };
