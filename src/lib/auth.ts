@@ -49,7 +49,7 @@ const signIn = async ({ token, hostname }: AuthTokenOptions) => {
 const signOut = () => {
   auth.update(prevAuth => ({
     ...prevAuth,
-    account: null,
+    account: undefined,
   }));
   clearState();
 };
@@ -66,7 +66,9 @@ const updateSettings = (data: SettingsState) => {
       ...prevAuth.settings,
       ...data,
     };
-    saveState(prevAuth.account, newSettings, prevAuth.githubSettings);
+    if (prevAuth.account) {
+      saveState(prevAuth.account, newSettings, prevAuth.githubSettings);
+    }
     return {
       ...prevAuth,
       settings: newSettings,
@@ -80,7 +82,9 @@ const updateGithubSettings = (data: GithubSettings) => {
       ...prevAuth.githubSettings,
       ...data,
     };
-    saveState(prevAuth.account, prevAuth.settings, newGHSettings);
+    if (prevAuth.account) {
+      saveState(prevAuth.account, prevAuth.settings, newGHSettings);
+    }
     return {
       ...prevAuth,
       githubSettings: newGHSettings,

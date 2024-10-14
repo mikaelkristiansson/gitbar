@@ -1,10 +1,10 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import type { Appearance } from '../types';
 
 // indicate if we're in dark mode or not
 let dark: boolean;
 
-let theme: keyof typeof Appearance;
+let theme: keyof typeof Appearance = 'dark';
 
 function setMatchTheme({ matches: dark }: MediaQueryListEvent) {
   // only set if we haven't overridden the theme
@@ -33,7 +33,7 @@ function setMode(value: boolean) {
 
   const newMode = dark ? 'dark' : 'light';
 
-  appearance.update((prev) => {
+  appearance.update(prev => {
     return {
       ...prev,
       theme: newMode,
@@ -49,7 +49,12 @@ function setMode(value: boolean) {
   }
 }
 
-export const appearance = writable({
+export const appearance: Writable<{
+  theme: keyof typeof Appearance;
+  toggle: () => void;
+  setTheme: (isDark: boolean) => void;
+  setMatchTheme: ({ matches }: MediaQueryListEvent) => void;
+}> = writable({
   theme,
   toggle,
   setTheme,

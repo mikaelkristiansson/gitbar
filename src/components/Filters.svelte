@@ -1,10 +1,11 @@
 <script lang="ts">
-  import Toggle from './Toggle.svelte';
-  import { auth } from '../lib/auth';
-  import Select from './Select.svelte';
-  import Button from './Button.svelte';
   import { onMount } from 'svelte';
+  import { auth } from '../lib/auth';
   import { getOrganizations } from '../lib/api';
+  import * as Select from '$lib/components/ui/select';
+  import { Button } from '$lib/components/ui/button';
+  import { Switch } from '$lib/components/ui/switch';
+  import { Label } from '$lib/components/ui/label';
 
   export let modalVisible: boolean;
   export let onSaved: () => void;
@@ -12,10 +13,10 @@
   let state = $auth.githubSettings.state;
   let type = $auth.githubSettings.type;
   let selectedOrganizations = $auth.githubSettings.organizations || [];
-  let organizations: string[] = [];
+  let organizationOptions: Array<{ value: string; label: string }> = [];
 
-  const changeShowArchive = e => {
-    showArchive = e.target.checked;
+  const changeShowArchive = (checked: boolean) => {
+    showArchive = checked;
   };
 
   const onSave = () => {
@@ -29,78 +30,79 @@
     onSaved();
   };
 
-  const updateSelectedOrganizations = e => {
-    const value = e.target.value;
-    if (selectedOrganizations.includes(value)) {
-      selectedOrganizations = selectedOrganizations.filter(org => org !== e.target.value);
-    } else {
-      selectedOrganizations = [...selectedOrganizations, e.target.value];
-    }
+  const updateSelectedOrganizations = (target: any) => {
+    const incoming = target as { value: string; label: string }[];
+    selectedOrganizations = incoming.map(i => i.value);
   };
+
+  const updateType = (target: any) => (type = target.value);
+  const updateState = (target: any) => (state = target.value);
+
+  const typeOptions = [
+    { value: 'review-requested', label: 'Reviews' },
+    { value: 'author', label: 'Created' },
+    { value: 'mentions', label: 'Mentions' },
+    { value: 'assignee', label: 'Assigned' },
+  ];
+  const stateOptions = [
+    { value: 'open', label: 'Open' },
+    { value: 'closed', label: 'Closed' },
+    { value: 'all', label: 'All' },
+  ];
 
   onMount(() => {
     if (!$auth.account) return;
     getOrganizations($auth.account).then(orgs => {
-      organizations = orgs;
+      organizationOptions = orgs.map(org => ({ value: org, label: org }));
     });
   });
 </script>
 
-<div class="flex justify-between items-start px-4 py-2 rounded-t border-b dark:border-slate-900">
-  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Filters</h3>
-  <button
-    type="button"
-    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-    on:click={() => (modalVisible = false)}
-  >
-    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fill-rule="evenodd"
-        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-        clip-rule="evenodd"
-      />
-    </svg>
-    <span class="sr-only">Close modal</span>
-  </button>
-</div>
-<div class="p-6 space-y-6">
-  <div>
-    <Toggle name="archive" checked={showArchive} label="Show archived" on:change={changeShowArchive} />
-    <div class="flex items-center justify-between gap-2">
-      <Select
-        name="type"
-        label="Type"
-        options={[
-          { value: 'review-requested', label: 'Reviews' },
-          { value: 'author', label: 'Created' },
-          { value: 'mentions', label: 'Mentions' },
-          { value: 'assignee', label: 'Assigned' },
-        ]}
-        selected={type}
-        onChange={e => (type = e.target.value)}
-      />
-      <Select
-        name="state"
-        label="State"
-        options={[
-          { value: 'open', label: 'Open' },
-          { value: 'closed', label: 'Closed' },
-          { value: 'all', label: 'All' },
-        ]}
-        selected={state}
-        onChange={e => (state = e.target.value)}
-      />
+<div class="space-y-6">
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center space-x-2">
+      <Switch id="archive" name="archive" checked={showArchive} onCheckedChange={changeShowArchive} />
+      <Label for="archive">Show archived</Label>
     </div>
-    <Select
-      name="organizations"
-      label="Organizations"
-      options={organizations.map(org => ({ value: org, label: org }))}
-      selected={selectedOrganizations}
-      onChange={updateSelectedOrganizations}
+    <div class="flex items-center justify-between gap-4">
+      <Select.Root items={typeOptions} selected={typeOptions.find(v => type)} onSelectedChange={updateType}>
+        <Select.Trigger>
+          <Select.Value placeholder="Type" />
+        </Select.Trigger>
+        <Select.Content>
+          {#each typeOptions as { value, label }}
+            <Select.Item {value} {label}>{label}</Select.Item>
+          {/each}
+        </Select.Content>
+      </Select.Root>
+      <Select.Root items={stateOptions} selected={stateOptions.find(v => state)} onSelectedChange={updateState}>
+        <Select.Trigger>
+          <Select.Value placeholder="State" />
+        </Select.Trigger>
+        <Select.Content>
+          {#each stateOptions as { value, label }}
+            <Select.Item {value} {label}>{label}</Select.Item>
+          {/each}
+        </Select.Content>
+      </Select.Root>
+    </div>
+    <Select.Root
+      items={organizationOptions}
+      selected={selectedOrganizations.map(v => ({ value: v, label: v }))}
       multiple
-    />
+      onSelectedChange={updateSelectedOrganizations}
+    >
+      <Select.Trigger class="w-full">
+        <Select.Value placeholder="Organizations" />
+      </Select.Trigger>
+      <Select.Content>
+        {#each organizationOptions as { value, label }}
+          <Select.Item {value} {label}>{label}</Select.Item>
+        {/each}
+      </Select.Content>
+    </Select.Root>
   </div>
   <div class="relative mt-4 flex items-end justify-end">
-    <Button type="button" on:click={onSave}>Save</Button>
+    <Button type="button" size="sm" on:click={onSave}>Save</Button>
   </div>
 </div>

@@ -50,12 +50,10 @@ export const getUserData = async (token: string, hostname: string): Promise<User
 
 export const getReviews = async (account: AuthState, settings: GithubSettings): Promise<Review> => {
   const orgs = settings.organizations?.map(org => `user:${org}`).join(' ');
-  console.log('🚀 ~ getReviews ~ orgs:', orgs);
   let search = `type:pr state:${settings.state} archived:${settings.archive} ${settings.type}:${account.user?.login}`;
   if (orgs) {
     search += ` ${orgs}`;
   }
-  console.log('🚀 ~ getReviews ~ search:', search);
   const text = `
   {
     search(query: "${search}", type: ISSUE, first: 100) {
@@ -68,6 +66,7 @@ export const getReviews = async (account: AuthState, settings: GithubSettings): 
             }
             author {
               login
+              __typename
             }
             createdAt
             number
@@ -152,26 +151,3 @@ export const getOrganizations = async (account: AuthState): Promise<string[]> =>
   orgs.unshift(data.data.viewer.login);
   return orgs;
 };
-
-// export const getOrganizations = async (account: AuthState): Promise<string[]> => {
-//   const client = await getClient();
-//   const response: {
-//     data: {
-//       viewer: {
-//         organizations: {
-//           nodes: Array<{
-//             login: string;
-//           }>;
-//         };
-//       };
-//     };
-//   } = await client.get(`https://api.${account.hostname}/user`, {
-//     responseType: ResponseType.JSON,
-//     headers: {
-//       Authorization: `token ${account.token}`,
-//     },
-//   });
-
-//   const { data } = response;
-//   return data.viewer.organizations.nodes.map(org => org.login);
-// };

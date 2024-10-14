@@ -62,14 +62,18 @@ export interface Review {
       };
       author: {
         login: string;
+        __typename: 'User' | 'Bot';
       };
-      createdAt: string;
+      createdAt: Date;
       number: string;
       url: string;
       title: string;
       labels: {
-        nodes: Array<{
-          name: string;
+        edges: Array<{
+          node: {
+            name: string;
+            color: string;
+          };
         }>;
       };
       statusCheckRollup: {
