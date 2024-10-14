@@ -68,6 +68,8 @@ export interface Review {
       number: string;
       url: string;
       title: string;
+      merged: boolean;
+      closed: boolean;
       labels: {
         edges: Array<{
           node: {

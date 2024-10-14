@@ -3,7 +3,6 @@
   import { Validators, type ValidatorFn, type ValidatorResult } from '../lib/validators';
   import { auth, createAuthURL, defaultGithubSettings, defaultSettings } from '../lib/auth';
   import { onDestroy, onMount } from 'svelte';
-  import { resetWindowSize } from '../lib/window-size';
   import { getServerPort } from '../lib/app';
   import { invoke } from '@tauri-apps/api/tauri';
   import { getAccessToken, getUserData } from '../lib/api';
@@ -78,7 +77,6 @@
   }
 
   onMount(async () => {
-    resetWindowSize();
     await invoke('start_server');
     port = await getServerPort();
     unlistenFn = await listen('code', async (event: { payload: string }) => {

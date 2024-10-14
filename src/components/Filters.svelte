@@ -6,6 +6,7 @@
   import { Button } from '$lib/components/ui/button';
   import { Switch } from '$lib/components/ui/switch';
   import { Label } from '$lib/components/ui/label';
+  import { Skeleton } from '$lib/components/ui/skeleton';
 
   export let modalVisible: boolean;
   export let onSaved: () => void;
@@ -14,6 +15,7 @@
   let type = $auth.githubSettings.type;
   let selectedOrganizations = $auth.githubSettings.organizations || [];
   let organizationOptions: Array<{ value: string; label: string }> = [];
+  let loadingOrganizations = false;
 
   const changeShowArchive = (checked: boolean) => {
     showArchive = checked;
@@ -52,9 +54,14 @@
 
   onMount(() => {
     if (!$auth.account) return;
-    getOrganizations($auth.account).then(orgs => {
-      organizationOptions = orgs.map(org => ({ value: org, label: org }));
-    });
+    loadingOrganizations = true;
+    getOrganizations($auth.account)
+      .then(orgs => {
+        organizationOptions = orgs.map(org => ({ value: org, label: org }));
+      })
+      .finally(() => {
+        loadingOrganizations = false;
+      });
   });
 </script>
 
@@ -65,7 +72,7 @@
       <Label for="archive">Show archived</Label>
     </div>
     <div class="flex items-center justify-between gap-4">
-      <Select.Root items={typeOptions} selected={typeOptions.find(v => type)} onSelectedChange={updateType}>
+      <Select.Root items={typeOptions} selected={typeOptions.find(v => v.value === type)} onSelectedChange={updateType}>
         <Select.Trigger>
           <Select.Value placeholder="Type" />
         </Select.Trigger>
@@ -75,7 +82,11 @@
           {/each}
         </Select.Content>
       </Select.Root>
-      <Select.Root items={stateOptions} selected={stateOptions.find(v => state)} onSelectedChange={updateState}>
+      <Select.Root
+        items={stateOptions}
+        selected={stateOptions.find(v => v.value === state)}
+        onSelectedChange={updateState}
+      >
         <Select.Trigger>
           <Select.Value placeholder="State" />
         </Select.Trigger>
@@ -86,21 +97,27 @@
         </Select.Content>
       </Select.Root>
     </div>
-    <Select.Root
-      items={organizationOptions}
-      selected={selectedOrganizations.map(v => ({ value: v, label: v }))}
-      multiple
-      onSelectedChange={updateSelectedOrganizations}
-    >
-      <Select.Trigger class="w-full">
-        <Select.Value placeholder="Organizations" />
-      </Select.Trigger>
-      <Select.Content>
-        {#each organizationOptions as { value, label }}
-          <Select.Item {value} {label}>{label}</Select.Item>
-        {/each}
-      </Select.Content>
-    </Select.Root>
+    <div class="h-10">
+      {#if loadingOrganizations}
+        <Skeleton class="h-10 w-full" />
+      {:else if organizationOptions.length !== 0}
+        <Select.Root
+          items={organizationOptions}
+          selected={selectedOrganizations.map(v => ({ value: v, label: v }))}
+          multiple
+          onSelectedChange={updateSelectedOrganizations}
+        >
+          <Select.Trigger class="w-full">
+            <Select.Value placeholder="Organizations" />
+          </Select.Trigger>
+          <Select.Content>
+            {#each organizationOptions as { value, label }}
+              <Select.Item {value} {label}>{label}</Select.Item>
+            {/each}
+          </Select.Content>
+        </Select.Root>
+      {/if}
+    </div>
   </div>
   <div class="relative mt-4 flex items-end justify-end">
     <Button type="button" size="sm" on:click={onSave}>Save</Button>

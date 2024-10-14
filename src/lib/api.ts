@@ -72,6 +72,8 @@ export const getReviews = async (account: AuthState, settings: GithubSettings): 
             number
             url
             title
+            merged
+            closed
             changedFiles
             labels(first: 10) {
               edges {
