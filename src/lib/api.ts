@@ -75,7 +75,8 @@ export const getReviews = async (account: AuthState, settings: GithubSettings): 
             merged
             closed
             isDraft
-            changedFiles
+            reviewDecision
+            totalCommentsCount
             labels(first: 10) {
               edges {
                 node {
