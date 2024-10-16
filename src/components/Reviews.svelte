@@ -127,6 +127,17 @@
                       d="M22.266 2.711a.75.75 0 1 0-1.061-1.06l-1.983 1.983-1.984-1.983a.75.75 0 1 0-1.06 1.06l1.983 1.983-1.983 1.984a.75.75 0 0 0 1.06 1.06l1.984-1.983 1.983 1.983a.75.75 0 0 0 1.06-1.06l-1.983-1.984 1.984-1.983ZM4.75 1.5a3.25 3.25 0 0 1 .745 6.414A.827.827 0 0 1 5.5 8v8a.827.827 0 0 1-.005.086A3.25 3.25 0 0 1 4.75 22.5a3.25 3.25 0 0 1-.745-6.414A.827.827 0 0 1 4 16V8c0-.029.002-.057.005-.086A3.25 3.25 0 0 1 4.75 1.5ZM16 19.25a3.252 3.252 0 0 1 2.5-3.163V9.625a.75.75 0 0 1 1.5 0v6.462a3.252 3.252 0 0 1-.75 6.413A3.25 3.25 0 0 1 16 19.25ZM3 4.75a1.75 1.75 0 1 0 3.501-.001A1.75 1.75 0 0 0 3 4.75Zm0 14.5a1.75 1.75 0 1 0 3.501-.001A1.75 1.75 0 0 0 3 19.25Zm16.25-1.75a1.75 1.75 0 1 0 .001 3.501 1.75 1.75 0 0 0-.001-3.501Z"
                     ></path></svg
                   >
+                {:else if review.node.isDraft}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    class="fill-gray-500 inline-block overflow-visible w-4 h-4"
+                    ><path
+                      d="M4.75 1.5a3.25 3.25 0 0 1 .745 6.414A.827.827 0 0 1 5.5 8v8a.827.827 0 0 1-.005.086A3.25 3.25 0 0 1 4.75 22.5a3.25 3.25 0 0 1-.745-6.414A.827.827 0 0 1 4 16V8c0-.029.002-.057.005-.086A3.25 3.25 0 0 1 4.75 1.5ZM16 19.25a3.25 3.25 0 1 1 6.5 0 3.25 3.25 0 0 1-6.5 0ZM3 4.75a1.75 1.75 0 1 0 3.501-.001A1.75 1.75 0 0 0 3 4.75Zm0 14.5a1.75 1.75 0 1 0 3.501-.001A1.75 1.75 0 0 0 3 19.25Zm16.25-1.75a1.75 1.75 0 1 0 .001 3.501 1.75 1.75 0 0 0-.001-3.501Zm0-11.5a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5ZM21 11.25a1.75 1.75 0 1 1-3.5 0 1.75 1.75 0 0 1 3.5 0Z"
+                    ></path></svg
+                  >
                 {:else}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +161,7 @@
                     class="text-slate-500 dark:text-gray-300 text-sm inline-flex items-center justify-between w-full"
                     >{review.node.repository.nameWithOwner} #{review.node.number}
                     {#if !review.node.isReadByViewer}
-                      <div class="w-2 h-2 rounded-full bg-blue-400 inline-flex mr-2" />
+                      <div class="w-2 h-2 rounded-full bg-blue-500 dark:bg-blue-400 inline-flex mr-2" />
                     {/if}</span
                   >
                   <br />
@@ -172,31 +183,44 @@
                           {/if}
                         </span>
                       {/key}
-                      <Badge variant="outline" class="inline-flex items-center gap-1 text-xs">
-                        {#if review.node.statusCheckRollup?.state === 'SUCCESS'}
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 16 16"
-                            width="16"
-                            height="16"
-                            class="fill-green-600 flex overflow-visible w-3 h-3"
-                            ><path
-                              d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"
-                            ></path></svg
-                          >
-                        {:else}
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 12 12"
-                            width="12"
-                            height="12"
-                            class="fill-red-600 flex overflow-visible w-3 h-3"
-                            ><path
-                              d="M2.22 2.22a.749.749 0 0 1 1.06 0L6 4.939 8.72 2.22a.749.749 0 1 1 1.06 1.06L7.061 6 9.78 8.72a.749.749 0 1 1-1.06 1.06L6 7.061 3.28 9.78a.749.749 0 1 1-1.06-1.06L4.939 6 2.22 3.28a.749.749 0 0 1 0-1.06Z"
-                            ></path></svg
-                          >
-                        {/if}
-                      </Badge>
+                      {#if review.node.statusCheckRollup && review.node.statusCheckRollup?.state !== 'ERROR'}
+                        <Badge
+                          variant="outline"
+                          class="inline-flex items-center gap-0.5 leading-[11px] text-[11px] py-0 px-1 text-gray-500"
+                        >
+                          {#if review.node.statusCheckRollup.state === 'SUCCESS'}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 16 16"
+                              width="16"
+                              height="16"
+                              class="fill-green-600 flex overflow-visible w-3 h-3"
+                              ><path
+                                d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"
+                              ></path></svg
+                            >
+                          {:else if review.node.statusCheckRollup.state === 'FAILURE'}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 12 12"
+                              width="12"
+                              height="12"
+                              class="fill-red-600 flex overflow-visible w-3 h-3"
+                              ><path
+                                d="M2.22 2.22a.749.749 0 0 1 1.06 0L6 4.939 8.72 2.22a.749.749 0 1 1 1.06 1.06L7.061 6 9.78 8.72a.749.749 0 1 1-1.06 1.06L6 7.061 3.28 9.78a.749.749 0 1 1-1.06-1.06L4.939 6 2.22 3.28a.749.749 0 0 1 0-1.06Z"
+                              ></path></svg
+                            >
+                          {:else}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="fill-yellow-500 flex overflow-visible w-3 h-3"
+                              viewBox="0 0 16 16"
+                              width="16"
+                              height="16"><path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path></svg
+                            >
+                          {/if} Checks
+                        </Badge>
+                      {/if}
                     </div>
                     <div class="flex flex-row gap-1 mt-1 flex-wrap">
                       {#each review.node.labels.edges as label}
@@ -217,6 +241,49 @@
                         {/if}
                       {/each}
                     </div>
+                    <Badge
+                      variant="outline"
+                      class="inline-flex items-center gap-0.5 leading-[11px] text-[11px] py-0 px-1 text-gray-500"
+                    >
+                      {#if review.node.reviewDecision === 'APPROVED'}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 16 16"
+                          width="16"
+                          height="16"
+                          class="fill-green-600 flex overflow-visible w-3 h-3"
+                          ><path
+                            d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"
+                          ></path></svg
+                        >
+                      {:else}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="fill-gray-400 dark:fill-gray-500 flex overflow-visible w-3 h-3"
+                          viewBox="0 0 16 16"
+                          width="16"
+                          height="16"><path d="M8 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path></svg
+                        >
+                      {/if} Reviews
+                    </Badge>
+                    {#if review.node.totalCommentsCount > 0}
+                      <Badge
+                        variant="outline"
+                        class="inline-flex items-center gap-1 leading-[11px] text-[11px] py-0 px-1 text-gray-500"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 16 16"
+                          width="16"
+                          height="16"
+                          class="fill-gray-500 flex overflow-visible w-3 h-3"
+                          ><path
+                            d="M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1ZM1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25Zm13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"
+                          ></path></svg
+                        >
+                        {review.node.totalCommentsCount}
+                      </Badge>
+                    {/if}
                   {/if}
                 </div>
               </Tooltip.Trigger>

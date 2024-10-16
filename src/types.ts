@@ -70,6 +70,9 @@ export interface Review {
       title: string;
       merged: boolean;
       closed: boolean;
+      isDraft: boolean;
+      reviewDecision: 'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED';
+      totalCommentsCount: number;
       labels: {
         edges: Array<{
           node: {
@@ -79,7 +82,7 @@ export interface Review {
         }>;
       };
       statusCheckRollup: {
-        state: 'SUCCESS' | 'FAILURE';
+        state: 'SUCCESS' | 'FAILURE' | 'PENDING' | 'ERROR' | 'EXPECTED';
       };
       isReadByViewer: boolean;
     };
