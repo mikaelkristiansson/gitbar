@@ -70,6 +70,7 @@ export interface Review {
       title: string;
       merged: boolean;
       closed: boolean;
+      isDraft: boolean;
       labels: {
         edges: Array<{
           node: {

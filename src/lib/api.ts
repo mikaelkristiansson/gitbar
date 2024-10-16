@@ -74,6 +74,7 @@ export const getReviews = async (account: AuthState, settings: GithubSettings): 
             title
             merged
             closed
+            isDraft
             changedFiles
             labels(first: 10) {
               edges {
